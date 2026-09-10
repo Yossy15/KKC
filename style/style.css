@@ -39,14 +39,18 @@ html {
 .logo {
     height: 50px;
     width: auto;
-    border-radius: 50px;
+    /* border-radius: 50px; */
     /* display: inline-block; */
     /* float: left; */
-    background-color: var(--color-black);
+    /* background-color: var(--color-white); */
 }
 
 /* NAV */
 nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -71,10 +75,12 @@ main {
 /* MERCH */
 .merch-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
     background-color: var(--color-white);
+    margin-top: 16px;
+    border-bottom: 8px solid var(--color-gray-light);
 
     & .title {
         color: var(--color-black);
@@ -85,9 +91,22 @@ main {
         background-color: var(--color-black);
     }
 
-    &:hover .title {
+    &:hover .title,
+    &:hover .arrow-btn,
+    &:hover .arrow-btn-text {
         color: var(--color-white);
     }
+}
+
+.arrow-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-black);
+    font-size: 28px;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 0 10px;
 }
 
 .merch-container-body {
@@ -97,7 +116,8 @@ main {
     gap: 16px;
     padding: 20px 20px 24px;
     overflow-x: auto;
-    /* scroll-snap-type: x mandatory; */
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     background-color: var(--color-white);
@@ -171,7 +191,8 @@ main {
     letter-spacing: 0.5px;
 }
 
-.merch-overlay-sub {
+.merch-overlay-sub,
+.arrow-btn-text {
     color: var(--color-black);
     font-family: var(--font-krub);
     font-size: 12px;
@@ -183,7 +204,7 @@ main {
     position: relative;
     display: flex;
     align-items: center;
-    padding-top: 18px;
+
 }
 
 .merch-scroll-btn {
@@ -195,7 +216,7 @@ main {
     height: 36px;
     border: none;
     border-radius: 50%;
-    background-color: var(--color-black);
+    background-color: var(--color-gray-dark);
     color: var(--color-white);
     font-size: 20px;
     line-height: 1;
@@ -220,6 +241,25 @@ main {
 
 .merch-scroll-btn--right {
     right: 6px;
+}
+
+/* FOOTER */
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 64px;
+    padding: 10px 20px;
+    background-color: var(--color-white);
+    margin-top: 16px;
+    border-top: 8px solid var(--color-gray-light);
+
+    & .footer-text {
+        color: var(--color-black);
+        font-family: var(--font-black-ops-one);
+        font-size: 15px;
+        letter-spacing: 0.5px;
+    }
 }
 
 /* .merch-container:nth-child(1) {
