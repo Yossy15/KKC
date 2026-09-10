@@ -167,7 +167,7 @@ main {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 30%;
+    height: 35%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -182,6 +182,11 @@ main {
 .merch-container-card:hover .merch-overlay {
     opacity: 1;
     transform: translateY(0);
+    box-shadow: 0 0 2px var(--color-gray-dark);
+}
+
+.merch-container-card:hover {
+    box-shadow: 0 0 4px var(--color-gray-dark);
 }
 
 .merch-overlay-title {
@@ -260,6 +265,12 @@ main {
         font-size: 15px;
         letter-spacing: 0.5px;
     }
+}
+
+.merch-overlay-sub-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 /* .merch-container:nth-child(1) {
