@@ -10,16 +10,22 @@
 
 <body>
     <nav>
-        <div class="nav-container"> <img src="./assets/yossy_logo.png" alt="logo" class="logo">
-            <h1 class="title black-ops-one-regular"> KAI KHONG CHAN </h1>
+        <div class="nav-container">
+            <img src="./assets/logo.png" alt="logo" class="logo">
+            <!-- <h1 class="title"> KAI KHONG CHAN </h1> -->
         </div>
     </nav>
+
     <main>
 
         <!-- เสื้อ -->
-        <div style="">
+        <div>
             <div class="merch-container">
-                <h1 class="title black-ops-one-regular">T-SHIRT</h1>
+                <h1 class="title">T-SHIRT</h1>
+                <a class="arrow-btn" href="#" aria-label="เพิ่มเติม">
+                    <span class="arrow-btn-text">เพิ่มเติม</span>
+                    <span class="arrow-btn-icon">&#8250;</span>
+                </a>
             </div>
             <div class="merch-scroll-wrapper">
                 <button class="merch-scroll-btn merch-scroll-btn--left" aria-label="เลื่อนซ้าย">&#8249;</button>
@@ -34,29 +40,102 @@
                     </div>
                 </div> -->
 
-                <div class="merch-container-body" id="merch-container"></div>
+                <div class="merch-container-body" id="merch-container-shirt"></div>
 
                 <button class="merch-scroll-btn merch-scroll-btn--right" aria-label="เลื่อนขวา">&#8250;</button>
             </div>
         </div>
+
+        <!-- กางเกง -->
+        <div>
+            <div class="merch-container">
+                <h1 class="title">PANTS</h1>
+                <a class="arrow-btn" href="#" aria-label="เพิ่มเติม">
+                    <span class="arrow-btn-text">เพิ่มเติม</span>
+                    <span class="arrow-btn-icon">&#8250;</span>
+                </a>
+            </div>
+
+            <div class="merch-scroll-wrapper">
+                <button class="merch-scroll-btn merch-scroll-btn--left" aria-label="เลื่อนซ้าย">&#8249;</button>
+
+                <div class="merch-container-body" id="merch-container-pants"></div>
+
+                <button class="merch-scroll-btn merch-scroll-btn--right" aria-label="เลื่อนขวา">&#8250;</button>
+            </div>
+        </div>
+
+
+        <!-- กระโปรง -->
+        <div>
+            <div class="merch-container">
+                <h1 class="title">SKIRTS</h1>
+                <a class="arrow-btn" href="#" aria-label="เพิ่มเติม">
+                    <span class="arrow-btn-text">เพิ่มเติม</span>
+                    <span class="arrow-btn-icon">&#8250;</span>
+                </a>
+            </div>
+
+            <div class="merch-scroll-wrapper">
+                <button class="merch-scroll-btn merch-scroll-btn--left" aria-label="เลื่อนซ้าย">&#8249;</button>
+
+                <div class="merch-container-body" id="merch-container-skirts"></div>
+
+                <button class="merch-scroll-btn merch-scroll-btn--right" aria-label="เลื่อนขวา">&#8250;</button>
+            </div>
+        </div>
+
+        <!-- หมวก -->
+        <div>
+            <div class="merch-container">
+                <h1 class="title">CAPS</h1>
+                <a class="arrow-btn" href="#" aria-label="เพิ่มเติม">
+                    <span class="arrow-btn-text">เพิ่มเติม</span>
+                    <span class="arrow-btn-icon">&#8250;</span>
+                </a>
+            </div>
+
+            <div class="merch-scroll-wrapper">
+                <button class="merch-scroll-btn merch-scroll-btn--left" aria-label="เลื่อนซ้าย">&#8249;</button>
+
+                <div class="merch-container-body" id="merch-container-cap"></div>
+
+                <button class="merch-scroll-btn merch-scroll-btn--right" aria-label="เลื่อนขวา">&#8250;</button>
+            </div>
+        </div>
+
     </main>
 
+    <footer>
+        <div class="footer-container">
+            <span class="footer-text"> © 2026 KAI KHONG CHAN ALL RIGHTS RESERVED. </span>
+        </div>
+    </footer>
+
     <script src="./js/scroll.js"></script>
+
     <script>
-        const container = document.getElementById("merch-container");
+        const products = [
+            { container: "merch-container-shirt", image: "./assets/shirt.png", alt: "shirt", name: "Classic Tee" },
+            { container: "merch-container-pants", image: "./assets/pants.png", alt: "pants", name: "Classic Pants" },
+            { container: "merch-container-skirts", image: "./assets/skirt.png", alt: "skirts", name: "Classic Skirts" },
+            { container: "merch-container-cap", image: "./assets/cap.png", alt: "cap", name: "Classic Cap" }
+        ];
 
-        for (let i = 0; i < 10; i++) {
-            container.innerHTML += `
+        products.forEach(product => {
+            const container = document.getElementById(product.container);
+            for (let i = 0; i < 10; i++) {
+                container.innerHTML += `
             <div class="merch-container-card">
-                <img src="./assets/shirt.png" alt="shirt" class="merch-img">
-
+                <img src="${product.image}" alt="${product.alt}" class="merch-img" >
                 <div class="merch-overlay">
-                    <span class="merch-overlay-title">Classic Tee</span>
-                    <span class="merch-overlay-sub">ดูรายละเอียด</span>
+                    <span class="merch-overlay-title"> ${product.name} ${i + 1}</span>
+                    <span class="merch-overlay-sub"> ดูรายละเอียด </span>
                 </div>
             </div>
-        `;
-        }
+            `;
+            }
+        });
     </script>
 </body>
 
