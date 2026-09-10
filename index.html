@@ -5,10 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style/style.css">
 </head>
 
 <body>
-    <h1>Hi</h1>
+    <nav>
+        <div class="nav-container"> <img src="./assets/yossy_logo.png" alt="logo" class="logo">
+            <h1 class="title black-ops-one-regular"> KAI KHONG CHAN </h1>
+        </div>
+    </nav>
+    <main>
+
+        <!-- เสื้อ -->
+        <div style="">
+            <div class="merch-container">
+                <h1 class="title black-ops-one-regular">T-SHIRT</h1>
+            </div>
+            <div class="merch-scroll-wrapper">
+                <button class="merch-scroll-btn merch-scroll-btn--left" aria-label="เลื่อนซ้าย">&#8249;</button>
+
+                <!-- <div class="merch-container-body">
+                    <div class="merch-container-card">
+                        <img src="./assets/shirt.png" alt="shirt" class="merch-img">
+                        <div class="merch-overlay">
+                            <span class="merch-overlay-title">Classic Tee</span>
+                            <span class="merch-overlay-sub">ดูรายละเอียด</span>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="merch-container-body" id="merch-container"></div>
+
+                <button class="merch-scroll-btn merch-scroll-btn--right" aria-label="เลื่อนขวา">&#8250;</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="./js/scroll.js"></script>
+    <script>
+        const container = document.getElementById("merch-container");
+
+        for (let i = 0; i < 10; i++) {
+            container.innerHTML += `
+            <div class="merch-container-card">
+                <img src="./assets/shirt.png" alt="shirt" class="merch-img">
+
+                <div class="merch-overlay">
+                    <span class="merch-overlay-title">Classic Tee</span>
+                    <span class="merch-overlay-sub">ดูรายละเอียด</span>
+                </div>
+            </div>
+        `;
+        }
+    </script>
 </body>
 
 </html>
