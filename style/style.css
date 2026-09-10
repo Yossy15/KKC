@@ -1,0 +1,235 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Krub:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+/* FONTS */
+:root {
+    --font-black-ops-one: "Black Ops One", system-ui;
+    --font-krub: "Krub", sans-serif;
+}
+
+/* COLORs */
+:root {
+    --color-black: #000000;
+    --color-white: #FFFFFF;
+    --color-gray-dark: #2F2F2F;
+    --color-gray-light: #EFEFEF;
+    --color-error: #CC0000;
+    --color-warning: #FFD700;
+    --color-success: #00FF00;
+    --color-info: #0000FF;
+    --color-warm: #FF9999;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: var(--color-gray-light);
+}
+
+.title {
+    font-family: var(--font-black-ops-one);
+    font-weight: 400;
+    font-style: normal;
+}
+
+.logo {
+    height: 50px;
+    width: auto;
+    border-radius: 50px;
+    /* display: inline-block; */
+    /* float: left; */
+    background-color: var(--color-black);
+}
+
+/* NAV */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--color-white);
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* MERCH */
+.merch-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--color-white);
+
+    & .title {
+        color: var(--color-black);
+        cursor: pointer;
+    }
+
+    &:hover {
+        background-color: var(--color-black);
+    }
+
+    &:hover .title {
+        color: var(--color-white);
+    }
+}
+
+.merch-container-body {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 20px 24px;
+    overflow-x: auto;
+    /* scroll-snap-type: x mandatory; */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    background-color: var(--color-white);
+
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--color-black);
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+}
+
+.merch-container-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 200px;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 4px;
+    scroll-snap-align: start;
+    cursor: pointer;
+
+    &:hover .merch-img {
+        transform: scale(1.06);
+    }
+
+}
+
+.merch-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+
+/* OVERLAY */
+.merch-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px 14px;
+    background-color: var(--color-gray-light);
+    opacity: 0;
+    transform: translateY(100%);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.merch-container-card:hover .merch-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.merch-overlay-title {
+    color: var(--color-black);
+    font-family: var(--font-black-ops-one);
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+.merch-overlay-sub {
+    color: var(--color-black);
+    font-family: var(--font-krub);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* SCROLL */
+.merch-scroll-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-top: 18px;
+}
+
+.merch-scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease;
+}
+
+.merch-scroll-btn:hover {
+    background-color: var(--color-gray-dark);
+}
+
+.merch-scroll-btn:active {
+    transform: translateY(-50%) scale(0.9);
+}
+
+.merch-scroll-btn--left {
+    left: 6px;
+}
+
+.merch-scroll-btn--right {
+    right: 6px;
+}
+
+/* .merch-container:nth-child(1) {
+    background-color: var(--color-warm);
+}
+
+.merch-container:nth-child(2) {
+    background-color: var(--color-black);
+}
+
+.merch-container:nth-child(3) {
+    background-color: var(--color-white);
+} */
