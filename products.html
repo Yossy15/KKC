@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KKC - Products</title>
+    <title>KKC - Filter</title>
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/logo-nrm.jpg" />
-    <link rel="stylesheet" href="./style/style.css" />
-    <link rel="stylesheet" href="./style/products.css" />
+    <link rel="stylesheet" href="style/style.css" />
+    <link rel="stylesheet" href="style/fitter.css" />
 </head>
 
 <body>
@@ -21,23 +21,94 @@
         <div class="path-home-container">
             <a href="index.html"><img src="./public/home.svg" alt="home" /></a>
             <img src="./public/arrow.svg" alt="arrow" class="arrow" />
-            <a href="filter-mobile.html" class="path-text">Filter</a>
-            <img src="./public/arrow.svg" alt="arrow" class="arrow" />
-            <span class="path-text">Products</span>
+            <a href="products.html" class="path-text">Filter</a>
         </div>
     </section>
 
-    <section class="products-wrapper">
-        <div class="products-header">
-            <h1 class="title">PRODUCTS</h1>
-            <a href="filter-mobile.html" class="">
-                <!--<span>กรอง</span>-->
-                <img src="./public/sort.svg" alt="filter" class="filter-icon" />
-            </a>
-        </div>
+    <section>
+        <div class="fitter-row">
+            <section class="fitter">
+                <div class="divider-head">
+                    <h1 class="title">FILTER</h1>
+                </div>
 
-        <div class="products-grid" id="productsGrid">
-            <!--  -->
+                <form id="filterForm">
+                    <!-- สินค้า -->
+                    <div class="filter-section">
+                        <h3>สินค้า</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="product" value="shirt" />
+                                เสื้อ</label>
+                            <label><input type="checkbox" name="product" value="pants" />
+                                กางเกง</label>
+                            <label><input type="checkbox" name="product" value="skirt" />
+                                กระโปรง</label>
+                            <label><input type="checkbox" name="product" value="cap" />
+                                หมวก</label>
+                        </div>
+                    </div>
+
+                    <!-- ขนาดเอว -->
+                    <div class="filter-section">
+                        <h3>ขนาดเอว</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="waist" value="S" />
+                                S (20-25)</label>
+                            <label><input type="checkbox" name="waist" value="M" />
+                                M (25-28)</label>
+                            <label><input type="checkbox" name="waist" value="L" />
+                                L (30-35)</label>
+                        </div>
+                    </div>
+
+                    <!-- ขนาดอก -->
+                    <div class="filter-section">
+                        <h3>ขนาดอก</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="chest" value="S" />
+                                S (40-43)</label>
+                            <label><input type="checkbox" name="chest" value="M" />
+                                M (44-46)</label>
+                            <label><input type="checkbox" name="chest" value="L" />
+                                L (46-50)</label>
+                        </div>
+                    </div>
+
+                    <!-- ราคา -->
+                    <div class="filter-section">
+                        <h3>ราคา</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="price" value="20" />
+                                20 บาท</label>
+                            <label><input type="checkbox" name="price" value="25" />
+                                25 บาท</label>
+                            <label><input type="checkbox" name="price" value="30" />
+                                30 บาท</label>
+                            <label><input type="checkbox" name="price" value="35" />
+                                35 บาท</label>
+                        </div>
+                    </div>
+
+                    <!--<button type="submit" class="filter-btn">ค้นหา</button>-->
+                </form>
+            </section>
+
+            <!-- -->
+            <section class="fitter-data">
+                <div class="fitter-container-data-header divider-head">
+                    <h1 class="title">PRODUCTS</h1>
+                    <!--  -->
+                    <div class="filter-mobile">
+                        <a href="filter-mobile.html">
+                            <img src="./public/sort.svg" alt="filter" class="filter-icon" />
+                        </a>
+                    </div>
+                </div>
+
+                <div class="fitter-container-data" id="productsGrid">
+                    <!--  -->
+                </div>
+            </section>
         </div>
     </section>
 
@@ -141,69 +212,96 @@
             },
         ];
 
-        const params = new URLSearchParams(window.location.search);
-        const filters = {
-            product: params.getAll("product"),
-            waist: params.getAll("waist"),
-            chest: params.getAll("chest"),
-            price: params.getAll("price"),
-        };
+        function renderProducts(products) {
+            const container = document.getElementById("productsGrid");
+            container.innerHTML = "";
 
-        function matchesFilter(product) {
-            if (
-                filters.product.length &&
-                !filters.product.includes(product.type)
-            )
-                return false;
-            if (
-                filters.waist.length &&
-                !filters.waist.includes(product.waist)
-            )
-                return false;
-            if (
-                filters.chest.length &&
-                !filters.chest.includes(product.chest)
-            )
-                return false;
-            if (
-                filters.price.length &&
-                !filters.price.includes(String(product.price))
-            )
-                return false;
-            return true;
-        }
+            if (products.length === 0) {
+                container.innerHTML =
+                    '<p class="no-results">ไม่พบสินค้าที่ตรงกับเงื่อนไข</p>';
+                return;
+            }
 
-        const filtered = allProducts.filter(matchesFilter);
-        const container = document.getElementById("productsGrid");
-
-        if (filtered.length === 0) {
-            container.innerHTML =
-                '<p class="no-results">ไม่พบสินค้าที่ตรงกับเงื่อนไข</p>';
-        } else {
-            filtered.forEach((product) => {
-                container.innerHTML += `
-                    <div class="product-card">
-                        <div class="merch-container-card">
-                            <img src="${product.image}" alt="${product.type}" class="merch-img">
-                            <div class="merch-overlay-search">
-                                <a href="#" class="circle">
-                                    <img src="./public/search.svg" alt="search" class="merch-img-search">
-                                </a>
+            products.forEach((product) => {
+                const card = document.createElement("div");
+                card.className = "product-card";
+                card.innerHTML = `
+                    <div class="merch-container-card">
+                        <img src="${product.image}" alt="${product.type}" class="merch-img">
+                        <div class="merch-overlay-search">
+                            <a href="#" class="circle">
+                                <img src="./public/search.svg" alt="search" class="merch-img-search">
+                            </a>
+                        </div>
+                        <div class="merch-overlay">
+                            <span class="merch-overlay-title">${product.name}</span>
+                            <span class="merch-overlay-sub">ขนาด: ${product.waist}-${product.chest}</span>
+                            <div class="merch-overlay-sub-detail">
+                                <span class="merch-overlay-sub">สี: ดำ</span>
+                                <span class="merch-overlay-sub">${product.price} บาท</span>
                             </div>
-                            <div class="merch-overlay">
-                                <span class="merch-overlay-title">${product.name}</span>
-                                <span class="merch-overlay-sub">ขนาด: ${product.waist}-${product.chest}</span>
-                                <div class="merch-overlay-sub-detail">
-                                    <span class="merch-overlay-sub">สี: ดำ</span>
-                                    <span class="merch-overlay-sub">${product.price} บาท</span>
-                                </div>
-                                <span class="merch-overlay-sub">ดูรายละเอียด</span>
-                            </div>
+                            <span class="merch-overlay-sub">ดูรายละเอียด</span>
                         </div>
                     </div>
                 `;
+                container.appendChild(card);
             });
         }
+
+        // Initial render
+        renderProducts(allProducts);
+
+        // Filter form submission
+        document
+            .getElementById("filterForm")
+            .addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                const filters = {
+                    product: formData.getAll("product"),
+                    waist: formData.getAll("waist"),
+                    chest: formData.getAll("chest"),
+                    price: formData.getAll("price"),
+                };
+
+                const filtered = allProducts.filter((product) => {
+                    if (
+                        filters.product.length &&
+                        !filters.product.includes(product.type)
+                    )
+                        return false;
+                    if (
+                        filters.waist.length &&
+                        !filters.waist.includes(product.waist)
+                    )
+                        return false;
+                    if (
+                        filters.chest.length &&
+                        !filters.chest.includes(product.chest)
+                    )
+                        return false;
+                    if (
+                        filters.price.length &&
+                        !filters.price.includes(String(product.price))
+                    )
+                        return false;
+                    return true;
+                });
+
+                renderProducts(filtered);
+            });
+
+        // Real-time filter update
+        document
+            .querySelectorAll('input[type="checkbox"]')
+            .forEach((checkbox) => {
+                checkbox.addEventListener("change", () => {
+                    document
+                        .getElementById("filterForm")
+                        .dispatchEvent(new Event("submit"));
+                });
+            });
     </script>
 </body>
 
