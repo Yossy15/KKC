@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KKC - Filter</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/logo-nrm.jpg" />
+    <link rel="stylesheet" href="style/style.css" />
+    <link rel="stylesheet" href="style/fitter.css" />
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="nav-container">
+            <img src="./assets/logo.png" alt="logo" class="logo" />
+        </a>
+    </nav>
+
+    <section>
+        <div class="path-home-container">
+            <a href="index.html"><img src="./public/home.svg" alt="home" /></a>
+            <img src="./public/arrow.svg" alt="arrow" class="arrow" />
+            <a href="products.html" class="path-text">Filter</a>
+        </div>
+    </section>
+
+    <section>
+        <div class="fitter-row">
+            <section class="fitter">
+                <div class="divider-head">
+                    <h1 class="title">FILTER</h1>
+                </div>
+
+                <form id="filterForm">
+                    <!-- สินค้า -->
+                    <div class="filter-section">
+                        <h3>สินค้า</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="product" value="shirt" />
+                                เสื้อ</label>
+                            <label><input type="checkbox" name="product" value="pants" />
+                                กางเกง</label>
+                            <label><input type="checkbox" name="product" value="skirt" />
+                                กระโปรง</label>
+                            <label><input type="checkbox" name="product" value="cap" />
+                                หมวก</label>
+                        </div>
+                    </div>
+
+                    <!-- ขนาดเอว -->
+                    <div class="filter-section">
+                        <h3>ขนาดเอว</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="waist" value="S" />
+                                S (20-25)</label>
+                            <label><input type="checkbox" name="waist" value="M" />
+                                M (25-28)</label>
+                            <label><input type="checkbox" name="waist" value="L" />
+                                L (30-35)</label>
+                        </div>
+                    </div>
+
+                    <!-- ขนาดอก -->
+                    <div class="filter-section">
+                        <h3>ขนาดอก</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="chest" value="S" />
+                                S (40-43)</label>
+                            <label><input type="checkbox" name="chest" value="M" />
+                                M (44-46)</label>
+                            <label><input type="checkbox" name="chest" value="L" />
+                                L (46-50)</label>
+                        </div>
+                    </div>
+
+                    <!-- ราคา -->
+                    <div class="filter-section">
+                        <h3>ราคา</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="price" value="20" />
+                                20 บาท</label>
+                            <label><input type="checkbox" name="price" value="25" />
+                                25 บาท</label>
+                            <label><input type="checkbox" name="price" value="30" />
+                                30 บาท</label>
+                            <label><input type="checkbox" name="price" value="35" />
+                                35 บาท</label>
+                        </div>
+                    </div>
+
+                    <!--<button type="submit" class="filter-btn">ค้นหา</button>-->
+                </form>
+            </section>
+
+            <!-- -->
+            <section class="fitter-data">
+                <div class="fitter-container-data-header divider-head">
+                    <h1 class="title">PRODUCTS</h1>
+                    <!--  -->
+                    <div class="filter-mobile">
+                        <a href="filter-mobile.html">
+                            <img src="./public/sort.svg" alt="filter" class="filter-icon" />
+                        </a>
+                    </div>
+                </div>
+
+                <div class="fitter-container-data" id="productsGrid">
+                    <!--  -->
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <section>
+        <footer>
+            <div class="footer-container">
+                <span class="footer-text"> © 2026 KAI KHONG CHAN </span>
+            </div>
+        </footer>
+    </section>
+
+    <script>
+        const allProducts = [
+            {
+                type: "shirt",
+                image: "./assets/shirt.png",
+                name: "Classic Tee",
+                waist: "S",
+                chest: "S",
+                price: 20,
+            },
+            {
+                type: "shirt",
+                image: "./assets/shirt.png",
+                name: "Classic Tee",
+                waist: "M",
+                chest: "M",
+                price: 25,
+            },
+            {
+                type: "shirt",
+                image: "./assets/shirt.png",
+                name: "Classic Tee",
+                waist: "L",
+                chest: "L",
+                price: 30,
+            },
+            {
+                type: "pants",
+                image: "./assets/pants.png",
+                name: "Classic Pants",
+                waist: "S",
+                chest: "S",
+                price: 25,
+            },
+            {
+                type: "pants",
+                image: "./assets/pants.png",
+                name: "Classic Pants",
+                waist: "M",
+                chest: "M",
+                price: 30,
+            },
+            {
+                type: "pants",
+                image: "./assets/pants.png",
+                name: "Classic Pants",
+                waist: "L",
+                chest: "L",
+                price: 35,
+            },
+            {
+                type: "skirt",
+                image: "./assets/skirt.png",
+                name: "Classic Skirt",
+                waist: "S",
+                chest: "S",
+                price: 20,
+            },
+            {
+                type: "skirt",
+                image: "./assets/skirt.png",
+                name: "Classic Skirt",
+                waist: "M",
+                chest: "M",
+                price: 25,
+            },
+            {
+                type: "skirt",
+                image: "./assets/skirt.png",
+                name: "Classic Skirt",
+                waist: "L",
+                chest: "L",
+                price: 30,
+            },
+            {
+                type: "cap",
+                image: "./assets/cap.png",
+                name: "Classic Cap",
+                waist: "S",
+                chest: "S",
+                price: 20,
+            },
+            {
+                type: "cap",
+                image: "./assets/cap.png",
+                name: "Classic Cap",
+                waist: "M",
+                chest: "M",
+                price: 25,
+            },
+        ];
+
+        function renderProducts(products) {
+            const container = document.getElementById("productsGrid");
+            container.innerHTML = "";
+
+            if (products.length === 0) {
+                container.innerHTML =
+                    '<p class="no-results">ไม่พบสินค้าที่ตรงกับเงื่อนไข</p>';
+                return;
+            }
+
+            products.forEach((product) => {
+                const card = document.createElement("div");
+                card.className = "product-card";
+                card.innerHTML = `
+                    <div class="merch-container-card">
+                        <img src="${product.image}" alt="${product.type}" class="merch-img">
+                        <div class="merch-overlay-search">
+                            <a href="#" class="circle">
+                                <img src="./public/search.svg" alt="search" class="merch-img-search">
+                            </a>
+                        </div>
+                        <div class="merch-overlay">
+                            <span class="merch-overlay-title">${product.name}</span>
+                            <span class="merch-overlay-sub">ขนาด: ${product.waist}-${product.chest}</span>
+                            <div class="merch-overlay-sub-detail">
+                                <span class="merch-overlay-sub">สี: ดำ</span>
+                                <span class="merch-overlay-sub">${product.price} บาท</span>
+                            </div>
+                            <span class="merch-overlay-sub">ดูรายละเอียด</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Initial render
+        renderProducts(allProducts);
+
+        // Filter form submission
+        document
+            .getElementById("filterForm")
+            .addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                const filters = {
+                    product: formData.getAll("product"),
+                    waist: formData.getAll("waist"),
+                    chest: formData.getAll("chest"),
+                    price: formData.getAll("price"),
+                };
+
+                const filtered = allProducts.filter((product) => {
+                    if (
+                        filters.product.length &&
+                        !filters.product.includes(product.type)
+                    )
+                        return false;
+                    if (
+                        filters.waist.length &&
+                        !filters.waist.includes(product.waist)
+                    )
+                        return false;
+                    if (
+                        filters.chest.length &&
+                        !filters.chest.includes(product.chest)
+                    )
+                        return false;
+                    if (
+                        filters.price.length &&
+                        !filters.price.includes(String(product.price))
+                    )
+                        return false;
+                    return true;
+                });
+
+                renderProducts(filtered);
+            });
+
+        // Real-time filter update
+        document
+            .querySelectorAll('input[type="checkbox"]')
+            .forEach((checkbox) => {
+                checkbox.addEventListener("change", () => {
+                    document
+                        .getElementById("filterForm")
+                        .dispatchEvent(new Event("submit"));
+                });
+            });
+    </script>
+</body>
+
+</html>

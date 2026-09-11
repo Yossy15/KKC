@@ -1,0 +1,130 @@
+.path-home-container {
+    margin: 16px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    opacity: 0.6;
+}
+
+.arrow,
+.path-text {
+    margin: 0 0 3px 8px;
+    width: 15px;
+    color: var(--color-gray-dark);
+}
+
+.filter-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    margin-top: 16px;
+}
+
+.filter-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--color-white);
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.filter-container .title {
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 4px solid var(--color-gray-light);
+}
+
+.filter-section {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--color-gray-light);
+}
+
+.filter-section:last-of-type {
+    border-bottom: none;
+}
+
+.filter-section h3 {
+    font-family: var(--font-krub);
+    color: var(--color-black);
+    margin-bottom: 12px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-krub);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.filter-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-krub);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.filter-btn:hover {
+    background-color: var(--color-gray-dark);
+}
+
+.filter-btn:active {
+    transform: scale(0.98);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .filter-wrapper {
+        padding: 12px;
+        margin-top: 12px;
+    }
+
+    .filter-container {
+        padding: 16px;
+    }
+
+    .filter-container .title {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+
+    .filter-section h3 {
+        font-size: 16px;
+    }
+
+    .checkbox-group label {
+        font-size: 14px;
+    }
+
+    .filter-btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .path-home-container {
+        margin: 12px;
+        padding: 0 8px;
+    }
+}

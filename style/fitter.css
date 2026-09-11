@@ -9,7 +9,7 @@
 
 .arrow,
 .path-text {
-    margin: 0 0 3px 8px; /* t r b l */
+    margin: 0 0 3px 8px;
     width: 15px;
     color: var(--color-gray-dark);
 }
@@ -23,51 +23,184 @@
     box-sizing: border-box;
 }
 
-/* ซ้าย 1/3 */
 .fitter {
     flex: 1;
-    height: calc(100vh - 40px);
-    overflow: hidden;
+    height: calc(100vh - 140px);
+    overflow-y: auto;
     border-radius: 4px;
     background-color: var(--color-white);
-    margin-top: 0;
     padding: 16px;
 }
 
-/* ขวา 2/3 */
 .fitter-data {
-    flex: 5.5;
-    height: calc(100vh - 40px);
-    overflow: hidden;
+    flex: 3;
+    height: calc(100vh - 140px);
+    overflow-y: auto;
     border-radius: 4px;
     background-color: var(--color-white);
-    margin-top: 0;
     padding: 16px;
 }
 
 .divider-head {
     border-bottom: 6px solid var(--color-gray-light);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.fitter-container-data-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mobile-filter-btn {
+    display: none;
+}
+
+.filter-section {
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-gray-light);
+}
+
+.filter-section:last-of-type {
+    border-bottom: none;
+}
+
+.filter-section h3 {
+    font-family: var(--font-krub);
+    color: var(--color-black);
+    margin-bottom: 8px;
 }
 
 .checkbox-form {
-    padding: 0 10px 16px;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-label {
-    padding: 0 10px;
+.checkbox-form label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-krub);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.checkbox-form input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.filter-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 16px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-krub);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.filter-btn:hover {
+    background-color: var(--color-gray-dark);
+}
+
+.filter-btn:active {
+    transform: scale(0.98);
 }
 
 .fitter-container-data {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(266px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
+    padding: 16px 0;
 }
 
-/* Product Card */
 .product-card {
     background-color: white;
-    border-radius: 8px;
-    padding: 15px;
-    box-sizing: border-box;
-    position: relative;
+    border-radius: 4px;
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    font-family: var(--font-krub);
+    font-size: 18px;
+    color: var(--color-gray-dark);
+}
+
+.filter-mobile {
+    display: none;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .filter-mobile {
+        display: block;
+    }
+
+    .fitter-row {
+        flex-direction: column;
+        padding: 0 12px;
+        gap: 12px;
+    }
+
+    .fitter {
+        display: none;
+    }
+
+    .fitter-data {
+        flex: 1;
+        height: auto;
+        padding: 12px;
+    }
+
+    .mobile-filter-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 12px;
+        background-color: var(--color-black);
+        color: var(--color-white);
+        border-radius: 4px;
+        text-decoration: none;
+        font-family: var(--font-krub);
+        font-size: 12px;
+        transition: background-color 0.2s;
+    }
+
+    .mobile-filter-btn:hover {
+        background-color: var(--color-gray-dark);
+    }
+
+    .divider-head {
+        border-bottom-width: 4px;
+    }
+
+    .fitter-container-data-header .title {
+        font-size: 20px;
+    }
+
+    .fitter-container-data {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    .no-results {
+        padding: 24px;
+        font-size: 14px;
+    }
+
+    .path-home-container {
+        margin: 12px;
+        padding: 0 8px;
+    }
 }
