@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KKC - Filter</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/logo-nrm.jpg" />
+    <link rel="stylesheet" href="../../style/style.css" />
+</head>
+
+<body>
+    <nav>
+        <a href="../../index.html" class="nav-container">
+            <img src="../../assets/logo.png" alt="logo" class="logo" />
+        </a>
+    </nav>
+
+    <section></section>
+    <div class="path-home-container">
+        <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+        <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+        <a href="../product/filter-mobile.html" class="path-text">Filter</a>
+    </div>
+    </section>
+
+    <section class="filter-wrapper">
+        <div class="filter-container">
+            <h1 class="title">FILTER</h1>
+
+            <form id="filterForm">
+                <div class="filter-section">
+                    <h3>สินค้า</h3>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="product" value="shirt" /> เสื้อ</label>
+                        <label><input type="checkbox" name="product" value="pants" /> กางเกง</label>
+                        <label><input type="checkbox" name="product" value="skirt" /> กระโปรง</label>
+                        <label><input type="checkbox" name="product" value="cap" /> หมวก</label>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>ขนาด</h3>
+                    <div class="checkbox-form">
+                        <label><input type="checkbox" name="size" value="S" /> S</label>
+                        <label><input type="checkbox" name="size" value="M" /> M</label>
+                        <label><input type="checkbox" name="size" value="L" /> L</label>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>ขนาด</h3>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="size" value="S" /> S</label>
+                        <label><input type="checkbox" name="size" value="M" /> M</label>
+                        <label><input type="checkbox" name="size" value="L" /> L</label>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>ราคา</h3>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="price" value="20" /> 20 บาท</label>
+                        <label><input type="checkbox" name="price" value="25" /> 25 บาท</label>
+                        <label><input type="checkbox" name="price" value="30" /> 30 บาท</label>
+                        <label><input type="checkbox" name="price" value="35" /> 35 บาท</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="filter-btn">ค้นหา</button>
+            </form>
+        </div>
+    </section>
+
+    <section>
+        <footer></footer>
+        <div class="footer-container">
+            <span class="footer-text"> © 2026 KAI KHONG CHAN </span>
+        </div>
+        </footer>
+    </section>
+
+    <script>
+        document.getElementById("filterForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const params = new URLSearchParams(new FormData(this));
+            window.location.href = "./filter-products.html?" + params.toString();
+        });
+    </script>
+</body>
+
+</html>

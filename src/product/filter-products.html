@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KKC - Filter</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/logo-nrm.jpg" />
+    <link rel="stylesheet" href="../../style/style.css" />
+</head>
+
+<body>
+    <nav>
+        <a href="../../index.html" class="nav-container">
+            <img src="../../assets/logo.png" alt="logo" class="logo" />
+        </a>
+    </nav>
+
+    <section>
+        <div class="path-home-container">
+            <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <!-- <a href="filter-mobile.html" class="path-text">Filter</a> -->
+            <a href="#" class="path-text">Filter</a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <span class="path-text">Products</span>
+        </div>
+    </section>
+
+    <section>
+        <div class="fitter-row">
+            <section class="fitter">
+                <div class="divider-head">
+                    <h1 class="title">FILTER</h1>
+                </div>
+
+                <form id="filterForm">
+                    <div class="filter-section">
+                        <h3>สินค้า</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="product" value="shirt" />
+                                เสื้อ</label>
+                            <label><input type="checkbox" name="product" value="pants" />
+                                กางเกง</label>
+                            <label><input type="checkbox" name="product" value="skirt" />
+                                กระโปรง</label>
+                            <label><input type="checkbox" name="product" value="cap" />
+                                หมวก</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3>ขนาด</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="size" value="S" />
+                                S</label>
+                            <label><input type="checkbox" name="size" value="M" />
+                                M</label>
+                            <label><input type="checkbox" name="size" value="L" />
+                                L</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3>ราคา</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="price" value="20" />
+                                20 บาท</label>
+                            <label><input type="checkbox" name="price" value="25" />
+                                25 บาท</label>
+                            <label><input type="checkbox" name="price" value="30" />
+                                30 บาท</label>
+                            <label><input type="checkbox" name="price" value="35" />
+                                35 บาท</label>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <section class="fitter-data">
+                <div class="fitter-container-data-header divider-head">
+                    <h1 class="title">PRODUCTS</h1>
+                    <div class="filter-mobile">
+                        <a href="../product/filter-mobile.html">
+                            <img src="../../public/sort.svg" alt="filter" class="filter-icon" />
+                        </a>
+                    </div>
+                </div>
+
+                <div class="fitter-container-data" id="productsGrid"></div>
+
+                <div class="page-number">
+                    <div class="page-number-container"></div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <section>
+        <footer>
+            <div class="footer-container">
+                <span class="footer-text"> © 2026 KAI KHONG CHAN </span>
+            </div>
+        </footer>
+    </section>
+
+    <script src="../../mockup/products.js"></script>
+    <script>
+        const allProducts = mockProducts.map((p) => ({
+            ...p,
+            image: p.image.replace("./assets/", "../../assets/"),
+        }));
+
+        let currentPage = 1;
+        const itemsPerPage = 15;
+        let filteredProducts = [...allProducts];
+
+        function renderProducts(products, page = 1) {
+            const container = document.getElementById("productsGrid");
+            container.innerHTML = "";
+
+            if (products.length === 0) {
+                container.innerHTML =
+                    '<p class="no-results">ไม่พบสินค้าที่ตรงกับเงื่อนไข</p>';
+                updatePagination(0);
+                return;
+            }
+
+            const start = (page - 1) * itemsPerPage;
+            const paginated = products.slice(start, start + itemsPerPage);
+
+            paginated.forEach((p) => {
+                const card = document.createElement("div");
+                card.className = "product-card";
+                card.innerHTML = `
+                    <div class="merch-container-card">
+                        <img src="${p.image}" alt="${p.type}" class="merch-img">
+                        <div class="merch-overlay-search">
+                            <a href="../detail/detail-products.html?id=${p.id}" class="circle">
+                                <img src="../../public/search.svg" alt="search" class="merch-img-search">
+                            </a>
+                        </div>
+                        <div class="merch-overlay">
+                            <span class="merch-overlay-title">${p.name}</span>
+                            <span class="merch-overlay-sub">ขนาด: ${p.size}</span>
+                            <div class="merch-overlay-sub-detail">
+                                <span class="merch-overlay-sub">สี: ${p.color}</span>
+                                <span class="merch-overlay-sub">${p.price} บาท</span>
+                            </div>
+                            <a href="../detail/detail-products.html?id=${p.id}" class="merch-overlay-sub">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            updatePagination(products.length);
+        }
+
+        function updatePagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const container = document.querySelector(
+                ".page-number-container",
+            );
+            container.innerHTML = "";
+
+            const prev = document.createElement("button");
+            prev.className = "page-number-button";
+            prev.disabled = currentPage === 1;
+            prev.innerHTML =
+                '<img src="../../public/arrow.svg" alt="arrow" class="arrow-left" />';
+            prev.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderProducts(filteredProducts, currentPage);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            };
+            container.appendChild(prev);
+
+            const maxVisible = 5;
+            let start = Math.max(
+                1,
+                currentPage - Math.floor(maxVisible / 2),
+            );
+            let end = Math.min(totalPages, start + maxVisible - 1);
+            if (end - start < maxVisible - 1)
+                start = Math.max(1, end - maxVisible + 1);
+
+            for (let i = start; i <= end; i++) {
+                const btn = document.createElement("a");
+                btn.href = "#";
+                btn.className =
+                    "page-number-button" +
+                    (i === currentPage ? " active" : "");
+                btn.textContent = i;
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    currentPage = i;
+                    renderProducts(filteredProducts, currentPage);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                };
+                container.appendChild(btn);
+            }
+
+            const next = document.createElement("button");
+            next.className = "page-number-button";
+            next.disabled = currentPage === totalPages || totalPages === 0;
+            next.innerHTML =
+                '<img src="../../public/arrow.svg" alt="arrow" class="arrow-right" />';
+            next.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderProducts(filteredProducts, currentPage);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            };
+            container.appendChild(next);
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.forEach((value, key) => {
+            document
+                .querySelectorAll(`input[name="${key}"][value="${value}"]`)
+                .forEach((cb) => (cb.checked = true));
+        });
+
+        if (urlParams.toString()) {
+            const formData = new FormData(
+                document.getElementById("filterForm"),
+            );
+            const filters = {
+                product: formData.getAll("product"),
+                size: formData.getAll("size"),
+                price: formData.getAll("price"),
+            };
+            filteredProducts = allProducts.filter((p) => {
+                if (
+                    filters.product.length &&
+                    !filters.product.includes(p.type)
+                )
+                    return false;
+                if (filters.size.length && !filters.size.includes(p.size))
+                    return false;
+                if (
+                    filters.price.length &&
+                    !filters.price.includes(String(p.price))
+                )
+                    return false;
+                return true;
+            });
+        }
+
+        renderProducts(filteredProducts, currentPage);
+
+        document
+            .getElementById("filterForm")
+            .addEventListener("submit", (e) => e.preventDefault());
+
+        document
+            .querySelectorAll('input[type="checkbox"]')
+            .forEach((checkbox) => {
+                checkbox.addEventListener("change", () => {
+                    const formData = new FormData(
+                        document.getElementById("filterForm"),
+                    );
+                    const filters = {
+                        product: formData.getAll("product"),
+                        size: formData.getAll("size"),
+                        price: formData.getAll("price"),
+                    };
+
+                    filteredProducts = allProducts.filter((p) => {
+                        if (
+                            filters.product.length &&
+                            !filters.product.includes(p.type)
+                        )
+                            return false;
+                        if (
+                            filters.size.length &&
+                            !filters.size.includes(String(p.size))
+                        )
+                            return false;
+                        if (
+                            filters.price.length &&
+                            !filters.price.includes(String(p.price))
+                        )
+                            return false;
+                        return true;
+                    });
+
+                    currentPage = 1;
+                    renderProducts(filteredProducts, currentPage);
+                });
+            });
+    </script>
+</body>
+
+</html>
