@@ -43,11 +43,31 @@ h3 {
     padding: 12px 0;
 }
 
+.path-home-container {
+    margin: 16px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    opacity: 0.6;
+}
+
+.arrow {
+    margin: 0 8px 0 8px;
+    width: 15px;
+    color: var(--color-gray-dark);
+}
+
 a {
     text-decoration: none;
 }
 
-label {
+p {
+    font-family: var(--font-krub);
+}
+
+label,
+span {
     font-family: var(--font-krub);
     font-size: 16px;
 }
@@ -220,11 +240,13 @@ main {
     opacity: 1;
     transform: translateY(0);
     box-shadow: 0 0 2px var(--color-gray-dark);
+    pointer-events: auto;
 }
 
 .merch-container-card:hover .merch-overlay-search {
     opacity: 1;
     transform: translateY(0);
+    pointer-events: auto;
 }
 
 .merch-container-card:hover {
@@ -236,6 +258,10 @@ main {
     font-family: var(--font-black-ops-one);
     font-size: 15px;
     letter-spacing: 0.5px;
+    white-space: nowrap;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    max-lines: 1;
 }
 
 .merch-overlay-sub,
@@ -344,8 +370,60 @@ main {
     box-shadow: 0 2px 4px var(--color-black);
 }
 
+.page-number {
+    margin: 12px;
+}
+
+.page-number-container {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 12px;
+}
+
+.page-number-button {
+    padding: 12px;
+    color: var(--color-black);
+    font-family: var(--font-black-ops-one);
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+.arrow-left {
+    transform: rotate(180deg);
+}
+
+.arrow-right {
+    transform: rotate(0deg);
+}
+
+.page-number-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background-color: var(--color-gray-light);
+        border-radius: 50%;
+        transform: translateY(-2px);
+    }
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
+    .page-number-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+    }
+
     .logo {
         height: 40px;
     }
@@ -382,6 +460,10 @@ main {
 
     .merch-container-card {
         width: 150px;
+    }
+
+    .merch-overlay {
+        height: 40%;
     }
 
     .merch-overlay-title {

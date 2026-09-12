@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KKC - Products</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/logo-nrm.jpg" />
+    <link rel="stylesheet" href="../../style/style.css" />
+    <link rel="stylesheet" href="../../style/products.css" />
+</head>
+
+<body>
+    <nav>
+        <a href="../../index.html" class="nav-container">
+            <img src="../../assets/logo.png" alt="logo" class="logo" />
+        </a>
+    </nav>
+
+    <section>
+        <div class="path-home-container">
+            <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <a href="filter-mobile.html" class="path-text">Filter</a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <span class="path-text">Products</span>
+        </div>
+    </section>
+
+    <section class="products-wrapper">
+        <div class="products-header">
+            <h1 class="title">PRODUCTS</h1>
+            <a href="../product/filter-mobile.html" class="">
+                <!--<span>กรอง</span>-->
+                <img src="../../public/sort.svg" alt="filter" class="filter-icon" />
+            </a>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            <!--  -->
+        </div>
+    </section>
+
+    <section>
+        <footer>
+            <div class="footer-container">
+                <span class="footer-text"> © 2026 KAI KHONG CHAN </span>
+            </div>
+        </footer>
+    </section>
+
+    <script src="../../mockup/products.js"></script>
+    <script>
+        const allProducts = mockProducts.map((product) => ({
+            ...product,
+            image: product.image.replace("./assets/", "../../assets/"),
+        }));
+
+        const params = new URLSearchParams(window.location.search);
+        const filters = {
+            product: params.getAll("product"),
+            waist: params.getAll("waist"),
+            chest: params.getAll("chest"),
+            price: params.getAll("price"),
+        };
+
+        function matchesFilter(product) {
+            if (
+                filters.product.length &&
+                !filters.product.includes(product.type)
+            )
+                return false;
+            if (
+                filters.waist.length &&
+                !filters.waist.includes(product.waist)
+            )
+                return false;
+            if (
+                filters.chest.length &&
+                !filters.chest.includes(product.chest)
+            )
+                return false;
+            if (
+                filters.price.length &&
+                !filters.price.includes(String(product.price))
+            )
+                return false;
+            return true;
+        }
+
+        const filtered = allProducts.filter(matchesFilter);
+        const container = document.getElementById("productsGrid");
+
+        if (filtered.length === 0) {
+            container.innerHTML =
+                '<p class="no-results">ไม่พบสินค้าที่ตรงกับเงื่อนไข</p>';
+        } else {
+            filtered.forEach((product) => {
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div class="merch-container-card">
+                            <img src="${product.image}" alt="${product.type}" class="merch-img">
+                            <div class="merch-overlay-search">
+                                <a href="../detail/detail-products.html?id=${product.id}" class="circle">
+                                    <img src="../../public/search.svg" alt="search" class="merch-img-search">
+                                </a>
+                            </div>
+                            <div class="merch-overlay">
+                                <span class="merch-overlay-title">${product.name}</span>
+                                <span class="merch-overlay-sub">ขนาด: ${product.size}</span>
+                                <div class="merch-overlay-sub-detail">
+                                    <span class="merch-overlay-sub">สี: ${product.color}</span>
+                                    <span class="merch-overlay-sub">${product.price} บาท</span>
+                                </div>
+                                <a href="../detail/detail-products.html?id=${product.id}" class="merch-overlay-sub">ดูรายละเอียด</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    </script>
+</body>
+
+</html>

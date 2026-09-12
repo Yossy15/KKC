@@ -5,23 +5,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KKC - Filter</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/logo-nrm.jpg" />
-    <link rel="stylesheet" href="style/style.css" />
-    <link rel="stylesheet" href="style/fitter.css" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/logo-nrm.jpg" />
+    <link rel="stylesheet" href="../../style/style.css" />
+    <link rel="stylesheet" href="../../style/fitter.css" />
 </head>
 
 <body>
     <nav>
-        <a href="index.html" class="nav-container">
-            <img src="./assets/logo.png" alt="logo" class="logo" />
+        <a href="../../index.html" class="nav-container">
+            <img src="../../assets/logo.png" alt="logo" class="logo" />
         </a>
     </nav>
 
     <section>
         <div class="path-home-container">
-            <a href="index.html"><img src="./public/home.svg" alt="home" /></a>
-            <img src="./public/arrow.svg" alt="arrow" class="arrow" />
-            <a href="products.html" class="path-text">Filter</a>
+            <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <a href="filter-mobile.html" class="path-text">Filter</a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <span class="path-text">Products</span>
         </div>
     </section>
 
@@ -99,14 +101,31 @@
                     <h1 class="title">PRODUCTS</h1>
                     <!--  -->
                     <div class="filter-mobile">
-                        <a href="filter-mobile.html">
-                            <img src="./public/sort.svg" alt="filter" class="filter-icon" />
+                        <a href="../product/filter-mobile.html">
+                            <img src="../../public/sort.svg" alt="filter" class="filter-icon" />
                         </a>
                     </div>
                 </div>
 
                 <div class="fitter-container-data" id="productsGrid">
                     <!--  -->
+                </div>
+
+                <!--  -->
+                <div class="page-number">
+                    <div class="page-number-container">
+                        <button class="page-number-button" id="prev" disabled>
+                            <img src="../../public/arrow.svg" alt="arrow" class="arrow-left" />
+                        </button>
+                        <a href="#" class="page-number-button">1</a>
+                        <a href="#" class="page-number-button">2</a>
+                        <a href="#" class="page-number-button">3</a>
+                        <a href="#" class="page-number-button">4</a>
+                        <a href="#" class="page-number-button">5</a>
+                        <button class="page-number-button" id="next" disabled>
+                            <img src="../../public/arrow.svg" alt="arrow" class="arrow-right" />
+                        </button>
+                    </div>
                 </div>
             </section>
         </div>
@@ -120,138 +139,145 @@
         </footer>
     </section>
 
+    <script src="../../mockup/products.js"></script>
     <script>
-        const allProducts = [
-            {
-                type: "shirt",
-                image: "./assets/shirt.png",
-                name: "Classic Tee",
-                waist: "S",
-                chest: "S",
-                price: 20,
-            },
-            {
-                type: "shirt",
-                image: "./assets/shirt.png",
-                name: "Classic Tee",
-                waist: "M",
-                chest: "M",
-                price: 25,
-            },
-            {
-                type: "shirt",
-                image: "./assets/shirt.png",
-                name: "Classic Tee",
-                waist: "L",
-                chest: "L",
-                price: 30,
-            },
-            {
-                type: "pants",
-                image: "./assets/pants.png",
-                name: "Classic Pants",
-                waist: "S",
-                chest: "S",
-                price: 25,
-            },
-            {
-                type: "pants",
-                image: "./assets/pants.png",
-                name: "Classic Pants",
-                waist: "M",
-                chest: "M",
-                price: 30,
-            },
-            {
-                type: "pants",
-                image: "./assets/pants.png",
-                name: "Classic Pants",
-                waist: "L",
-                chest: "L",
-                price: 35,
-            },
-            {
-                type: "skirt",
-                image: "./assets/skirt.png",
-                name: "Classic Skirt",
-                waist: "S",
-                chest: "S",
-                price: 20,
-            },
-            {
-                type: "skirt",
-                image: "./assets/skirt.png",
-                name: "Classic Skirt",
-                waist: "M",
-                chest: "M",
-                price: 25,
-            },
-            {
-                type: "skirt",
-                image: "./assets/skirt.png",
-                name: "Classic Skirt",
-                waist: "L",
-                chest: "L",
-                price: 30,
-            },
-            {
-                type: "cap",
-                image: "./assets/cap.png",
-                name: "Classic Cap",
-                waist: "S",
-                chest: "S",
-                price: 20,
-            },
-            {
-                type: "cap",
-                image: "./assets/cap.png",
-                name: "Classic Cap",
-                waist: "M",
-                chest: "M",
-                price: 25,
-            },
-        ];
+        // mockup
+        const allProducts = mockProducts.map((product) => ({
+            ...product,
+            image: product.image.replace("./assets/", "../../assets/"),
+        }));
 
-        function renderProducts(products) {
+        // page
+        let currentPage = 1;
+        const itemsPerPage = 15;
+        let filteredProducts = [...allProducts];
+
+        function renderProducts(products, page = 1) {
             const container = document.getElementById("productsGrid");
             container.innerHTML = "";
 
             if (products.length === 0) {
                 container.innerHTML =
                     '<p class="no-results">ไม่พบสินค้าที่ตรงกับเงื่อนไข</p>';
+                updatePagination(0);
                 return;
             }
 
-            products.forEach((product) => {
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedProducts = products.slice(startIndex, endIndex);
+
+            paginatedProducts.forEach((product) => {
                 const card = document.createElement("div");
                 card.className = "product-card";
                 card.innerHTML = `
                     <div class="merch-container-card">
                         <img src="${product.image}" alt="${product.type}" class="merch-img">
                         <div class="merch-overlay-search">
-                            <a href="#" class="circle">
-                                <img src="./public/search.svg" alt="search" class="merch-img-search">
+                            <a href="../detail/detail-products.html?id=${product.id}" class="circle">
+                                <img src="../../public/search.svg" alt="search" class="merch-img-search">
                             </a>
                         </div>
                         <div class="merch-overlay">
                             <span class="merch-overlay-title">${product.name}</span>
-                            <span class="merch-overlay-sub">ขนาด: ${product.waist}-${product.chest}</span>
+                            <span class="merch-overlay-sub">ขนาด: ${product.size}</span>
                             <div class="merch-overlay-sub-detail">
-                                <span class="merch-overlay-sub">สี: ดำ</span>
+                                <span class="merch-overlay-sub">สี: ${product.color}</span>
                                 <span class="merch-overlay-sub">${product.price} บาท</span>
                             </div>
-                            <span class="merch-overlay-sub">ดูรายละเอียด</span>
+                            <a href="../detail/detail-products.html?id=${product.id}" class="merch-overlay-sub">ดูรายละเอียด</a>
                         </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
+
+            updatePagination(products.length);
         }
 
-        // Initial render
-        renderProducts(allProducts);
+        function updatePagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const paginationContainer = document.querySelector(
+                ".page-number-container",
+            );
 
-        // Filter form submission
+            paginationContainer.innerHTML = "";
+
+            // pre
+            const prevBtn = document.createElement("button");
+            prevBtn.className = "page-number-button";
+            prevBtn.id = "prev";
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.innerHTML =
+                '<img src="../../public/arrow.svg" alt="arrow" class="arrow-left" />';
+            prevBtn.addEventListener("click", () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderProducts(filteredProducts, currentPage);
+                    scrollToTop();
+                }
+            });
+            paginationContainer.appendChild(prevBtn);
+
+            // page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(
+                1,
+                currentPage - Math.floor(maxVisiblePages / 2),
+            );
+            let endPage = Math.min(
+                totalPages,
+                startPage + maxVisiblePages - 1,
+            );
+
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement("a");
+                pageBtn.href = "#";
+                pageBtn.className = "page-number-button";
+                if (i === currentPage) {
+                    pageBtn.classList.add("active");
+                }
+                pageBtn.textContent = i;
+                pageBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    currentPage = i;
+                    renderProducts(filteredProducts, currentPage);
+                    scrollToTop();
+                });
+                paginationContainer.appendChild(pageBtn);
+            }
+
+            // next
+            const nextBtn = document.createElement("button");
+            nextBtn.className = "page-number-button";
+            nextBtn.id = "next";
+            nextBtn.disabled =
+                currentPage === totalPages || totalPages === 0;
+            nextBtn.innerHTML =
+                '<img src="../../public/arrow.svg" alt="arrow" class="arrow-right" />';
+            nextBtn.addEventListener("click", () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderProducts(filteredProducts, currentPage);
+                    scrollToTop();
+                }
+            });
+            paginationContainer.appendChild(nextBtn);
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // render
+        filteredProducts = [...allProducts];
+        renderProducts(filteredProducts, currentPage);
+
+        // filter
         document
             .getElementById("filterForm")
             .addEventListener("submit", function (e) {
@@ -265,7 +291,7 @@
                     price: formData.getAll("price"),
                 };
 
-                const filtered = allProducts.filter((product) => {
+                filteredProducts = allProducts.filter((product) => {
                     if (
                         filters.product.length &&
                         !filters.product.includes(product.type)
@@ -289,10 +315,10 @@
                     return true;
                 });
 
-                renderProducts(filtered);
+                currentPage = 1;
+                renderProducts(filteredProducts, currentPage);
             });
 
-        // Real-time filter update
         document
             .querySelectorAll('input[type="checkbox"]')
             .forEach((checkbox) => {

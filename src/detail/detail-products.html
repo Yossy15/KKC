@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KKC - Detail Product</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/logo-nrm.jpg" />
+    <link rel="stylesheet" href="../../style/style.css" />
+    <link rel="stylesheet" href="../../style/detail.css" />
+</head>
+
+<body>
+    <nav>
+        <a href="../../index.html" class="nav-container">
+            <img src="../../assets/logo.png" alt="logo" class="logo" />
+            <!-- <h1 class="title"> KAI KHONG CHAN </h1> -->
+        </a>
+    </nav>
+
+    <section>
+        <div class="path-home-container">
+            <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <a href="../product/filter-mobile.html" class="path-text">Detail</a>
+        </div>
+    </section>
+
+    <main class="product-container">
+        <div class="product-image">
+            <img id="productImage" src="../../assets/logo.png" alt="Product" class="logo" />
+        </div>
+        <div class="product-info-main">
+            <div class="colunm-flex">
+                <h1 class="title" id="productName">กำลังโหลด...</h1>
+                <p class="product-price" id="productPrice">(0 บาท)</p>
+            </div>
+            <div class="product-meta">
+                <span class="product-size" id="productSize">Size: -</span>
+                <span class="product-color" id="productColor">Color: -</span>
+            </div>
+        </div>
+    </main>
+
+    <section class="product-tab-container">
+        <div class="product-tabs">
+            <button class="tab-button active title" onclick="showTab('description', this)">
+                Description
+            </button>
+
+            <button class="tab-button title" onclick="showTab('info', this)">
+                Product Info
+            </button>
+        </div>
+
+        <!--  -->
+        <div id="description" class="tab-content active">
+            <label style="padding: 12px">- ไม่มีตำหนิ -</label>
+        </div>
+
+        <!--  -->
+        <div id="info" class="tab-content">
+            <table class="product-table" id="productInfoTable">
+                <tr>
+                    <th>รหัสสินค้า</th>
+                    <td id="infoId">-</td>
+                </tr>
+                <tr>
+                    <th>หมวดหมู่</th>
+                    <td id="infoCategory">-</td>
+                </tr>
+                <tr>
+                    <th>ชื่อสินค้า</th>
+                    <td id="infoName">-</td>
+                </tr>
+                <tr>
+                    <th>ขนาด</th>
+                    <td id="infoSize">-</td>
+                </tr>
+                <tr>
+                    <th>สี</th>
+                    <td id="infoColor">-</td>
+                </tr>
+                <tr>
+                    <th>ราคา</th>
+                    <td id="infoPrice">-</td>
+                </tr>
+                <tr>
+                    <th>คงเหลือ</th>
+                    <td>มีสินค้าพร้อมส่ง</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <footer>
+            <div class="footer-container">
+                <span class="footer-text"> © 2026 KAI KHONG CHAN </span>
+            </div>
+        </footer>
+    </section>
+
+    <script src="../../mockup/products.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = parseInt(urlParams.get("id"));
+
+        const categoryNames = {
+            shirt: "เสื้อ",
+            pants: "กางเกง",
+            skirt: "กระโปรง",
+            cap: "หมวก",
+        };
+
+        const product = mockProducts.find((p) => p.id === productId);
+
+        if (product) {
+            const productImagePath = product.image.replace(
+                "./assets/",
+                "../../assets/",
+            );
+            document.title = `KKC - ${product.name}`;
+
+            document.getElementById("productImage").src = productImagePath;
+            document.getElementById("productImage").alt = product.name;
+            document.getElementById("productName").textContent =
+                product.name;
+            document.getElementById("productPrice").textContent =
+                `ราคา: ${product.price} บาท`;
+            document.getElementById("productSize").textContent =
+                `Size: ${product.size}`;
+            document.getElementById("productColor").textContent =
+                `Color: ${product.color}`;
+
+            document.getElementById("infoId").textContent =
+                `P${String(product.id).padStart(5, "0")}`;
+            document.getElementById("infoCategory").textContent =
+                categoryNames[product.type] || product.type;
+            document.getElementById("infoName").textContent = product.name;
+            document.getElementById("infoSize").textContent =
+                product.size;
+            document.getElementById("infoColor").textContent =
+                product.color;
+            document.getElementById("infoPrice").textContent =
+                `${product.price} บาท`;
+        } else {
+            document.getElementById("productName").textContent =
+                "ไม่พบสินค้า";
+            document.getElementById("productPrice").textContent =
+                "กรุณาเลือกสินค้าใหม่";
+
+            setTimeout(() => {
+                if (
+                    confirm(
+                        "ไม่พบสินค้าที่ต้องการ\nต้องการกลับไปหน้าแรกหรือไม่?",
+                    )
+                ) {
+                    window.location.href = "../../index.html";
+                }
+            }, 500);
+        }
+
+        function showTab(tabId, button) {
+            document.querySelectorAll(".tab-content").forEach((content) => {
+                content.classList.remove("active");
+            });
+            document.querySelectorAll(".tab-button").forEach((btn) => {
+                btn.classList.remove("active");
+            });
+            document.getElementById(tabId).classList.add("active");
+            button.classList.add("active");
+        }
+    </script>
+</body>
+
+</html>
