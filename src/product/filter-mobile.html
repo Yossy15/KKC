@@ -7,7 +7,6 @@
     <title>KKC - Filter</title>
     <link rel="icon" type="image/png" sizes="32x32" href="../../assets/logo-nrm.jpg" />
     <link rel="stylesheet" href="../../style/style.css" />
-    <link rel="stylesheet" href="../../style/filter.css" />
 </head>
 
 <body>
@@ -17,12 +16,12 @@
         </a>
     </nav>
 
-    <section>
-        <div class="path-home-container">
-            <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
-            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
-            <a href="../product/filter-mobile.html" class="path-text">Filter</a>
-        </div>
+    <section></section>
+    <div class="path-home-container">
+        <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+        <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+        <a href="../product/filter-mobile.html" class="path-text">Filter</a>
+    </div>
     </section>
 
     <section class="filter-wrapper">
@@ -30,59 +29,41 @@
             <h1 class="title">FILTER</h1>
 
             <form id="filterForm">
-                <!-- สินค้า -->
                 <div class="filter-section">
                     <h3>สินค้า</h3>
                     <div class="checkbox-group">
-                        <label><input type="checkbox" name="product" value="shirt" />
-                            เสื้อ</label>
-                        <label><input type="checkbox" name="product" value="pants" />
-                            กางเกง</label>
-                        <label><input type="checkbox" name="product" value="skirt" />
-                            กระโปรง</label>
-                        <label><input type="checkbox" name="product" value="cap" />
-                            หมวก</label>
+                        <label><input type="checkbox" name="product" value="shirt" /> เสื้อ</label>
+                        <label><input type="checkbox" name="product" value="pants" /> กางเกง</label>
+                        <label><input type="checkbox" name="product" value="skirt" /> กระโปรง</label>
+                        <label><input type="checkbox" name="product" value="cap" /> หมวก</label>
                     </div>
                 </div>
 
-                <!-- ขนาดเอว -->
                 <div class="filter-section">
-                    <h3>ขนาดเอว</h3>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="waist" value="S" />
-                            S (20-25)</label>
-                        <label><input type="checkbox" name="waist" value="M" />
-                            M (25-28)</label>
-                        <label><input type="checkbox" name="waist" value="L" />
-                            L (30-35)</label>
+                    <h3>ขนาด</h3>
+                    <div class="checkbox-form">
+                        <label><input type="checkbox" name="size" value="S" /> S</label>
+                        <label><input type="checkbox" name="size" value="M" /> M</label>
+                        <label><input type="checkbox" name="size" value="L" /> L</label>
                     </div>
                 </div>
 
-                <!-- ขนาดอก -->
                 <div class="filter-section">
-                    <h3>ขนาดอก</h3>
+                    <h3>ขนาด</h3>
                     <div class="checkbox-group">
-                        <label><input type="checkbox" name="chest" value="S" />
-                            S (40-43)</label>
-                        <label><input type="checkbox" name="chest" value="M" />
-                            M (44-46)</label>
-                        <label><input type="checkbox" name="chest" value="L" />
-                            L (46-50)</label>
+                        <label><input type="checkbox" name="size" value="S" /> S</label>
+                        <label><input type="checkbox" name="size" value="M" /> M</label>
+                        <label><input type="checkbox" name="size" value="L" /> L</label>
                     </div>
                 </div>
 
-                <!-- ราคา -->
                 <div class="filter-section">
                     <h3>ราคา</h3>
                     <div class="checkbox-group">
-                        <label><input type="checkbox" name="price" value="20" />
-                            20 บาท</label>
-                        <label><input type="checkbox" name="price" value="25" />
-                            25 บาท</label>
-                        <label><input type="checkbox" name="price" value="30" />
-                            30 บาท</label>
-                        <label><input type="checkbox" name="price" value="35" />
-                            35 บาท</label>
+                        <label><input type="checkbox" name="price" value="20" /> 20 บาท</label>
+                        <label><input type="checkbox" name="price" value="25" /> 25 บาท</label>
+                        <label><input type="checkbox" name="price" value="30" /> 30 บาท</label>
+                        <label><input type="checkbox" name="price" value="35" /> 35 บาท</label>
                     </div>
                 </div>
 
@@ -92,29 +73,19 @@
     </section>
 
     <section>
-        <footer>
-            <div class="footer-container">
-                <span class="footer-text"> © 2026 KAI KHONG CHAN </span>
-            </div>
+        <footer></footer>
+        <div class="footer-container">
+            <span class="footer-text"> © 2026 KAI KHONG CHAN </span>
+        </div>
         </footer>
     </section>
 
     <script>
-        document
-            .getElementById("filterForm")
-            .addEventListener("submit", function (e) {
-                e.preventDefault();
-
-                const formData = new FormData(this);
-                const params = new URLSearchParams();
-
-                for (let [key, value] of formData.entries()) {
-                    params.append(key, value);
-                }
-
-                window.location.href =
-                    "./filter-products.html?" + params.toString();
-            });
+        document.getElementById("filterForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const params = new URLSearchParams(new FormData(this));
+            window.location.href = "./filter-products.html?" + params.toString();
+        });
     </script>
 </body>
 

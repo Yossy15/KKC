@@ -6,37 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KKC - Home</title>
     <link rel="stylesheet" href="style/style.css" />
-    <!-- Favicon (web icon) -->
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/logo-nrm.jpg" />
-    <!-- Alternative formats -->
-    <link rel="icon" type="image/x-icon" href="./assets/logo-nrm.jpg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/logo-nrm.jpg" />
+    <link rel="icon" type="image/png" href="./assets/logo-nrm.jpg" />
 </head>
 
 <body>
     <nav>
         <a href="index.html" class="nav-container">
             <img src="./assets/logo.png" alt="logo" class="logo" />
-            <!-- <h1 class="title"> KAI KHONG CHAN </h1> -->
         </a>
     </nav>
 
     <section>
         <main>
-            <!-- เสื้อ -->
             <section>
-                <!-- hede -->
                 <section>
                     <div class="merch-container">
                         <h1 class="title">T-SHIRT</h1>
-                        <a class="arrow-btn" href="./src/product/products.html" aria-label="เพิ่มเติม">
+                        <a class="arrow-btn" href="./src/product/filter-products.html" aria-label="เพิ่มเติม">
                             <span class="arrow-btn-text">เพิ่มเติม</span>
                             <span class="arrow-btn-icon">&#8250;</span>
                         </a>
                     </div>
                 </section>
 
-                <!-- รายการเสื้อ -->
                 <section>
                     <div class="merch-scroll-wrapper">
                         <button class="merch-scroll-btn merch-scroll-btn--left" aria-label="เลื่อนซ้าย">
@@ -50,20 +42,17 @@
                 </section>
             </section>
 
-            <!-- กางเกง -->
             <section>
-                <!--  -->
                 <section>
                     <div class="merch-container">
                         <h1 class="title">PANTS</h1>
-                        <a class="arrow-btn" href="./src/product/products.html" aria-label="เพิ่มเติม">
+                        <a class="arrow-btn" href="./src/product/filter-products.html" aria-label="เพิ่มเติม">
                             <span class="arrow-btn-text">เพิ่มเติม</span>
                             <span class="arrow-btn-icon">&#8250;</span>
                         </a>
                     </div>
                 </section>
 
-                <!--  -->
                 <section>
                     <div class="merch-scroll-wrapper">
                         <button class="merch-scroll-btn merch-scroll-btn--left" aria-label="เลื่อนซ้าย">
@@ -77,20 +66,17 @@
                 </section>
             </section>
 
-            <!-- กระโปรง -->
             <section>
-                <!--  -->
                 <section>
                     <div class="merch-container">
                         <h1 class="title">SKIRTS</h1>
-                        <a class="arrow-btn" href="./src/product/products.html" aria-label="เพิ่มเติม">
+                        <a class="arrow-btn" href="./src/product/filter-products.html" aria-label="เพิ่มเติม">
                             <span class="arrow-btn-text">เพิ่มเติม</span>
                             <span class="arrow-btn-icon">&#8250;</span>
                         </a>
                     </div>
                 </section>
 
-                <!--  -->
                 <section>
                     <div class="merch-scroll-wrapper">
                         <button class="merch-scroll-btn merch-scroll-btn--left" aria-label="เลื่อนซ้าย">
@@ -104,20 +90,17 @@
                 </section>
             </section>
 
-            <!-- หมวก -->
             <section>
-                <!--  -->
                 <section>
                     <div class="merch-container">
                         <h1 class="title">CAPS</h1>
-                        <a class="arrow-btn" href="./src/product/products.html" aria-label="เพิ่มเติม">
+                        <a class="arrow-btn" href="./src/product/filter-products.html" aria-label="เพิ่มเติม">
                             <span class="arrow-btn-text">เพิ่มเติม</span>
                             <span class="arrow-btn-icon">&#8250;</span>
                         </a>
                     </div>
                 </section>
 
-                <!--  -->
                 <section>
                     <div class="merch-scroll-wrapper">
                         <button class="merch-scroll-btn merch-scroll-btn--left" aria-label="เลื่อนซ้าย">
@@ -141,45 +124,79 @@
         </footer>
     </section>
 
-    <script src="./js/scroll.js"></script>
     <script src="./mockup/products.js"></script>
-
     <script>
         const containers = [
-            { id: "merch-container-shirt", type: "shirt", alt: "shirt" },
-            { id: "merch-container-pants", type: "pants", alt: "pants" },
-            { id: "merch-container-skirts", type: "skirt", alt: "skirts" },
-            { id: "merch-container-cap", type: "cap", alt: "cap" },
+            { id: "merch-container-shirt", type: "shirt" },
+            { id: "merch-container-pants", type: "pants" },
+            { id: "merch-container-skirts", type: "skirt" },
+            { id: "merch-container-cap", type: "cap" },
         ];
 
-        containers.forEach((containerInfo) => {
-            const container = document.getElementById(containerInfo.id);
+        containers.forEach((c) => {
+            const el = document.getElementById(c.id);
             const products = mockProducts
-                .filter((p) => p.type === containerInfo.type)
+                .filter((p) => p.type === c.type)
                 .slice(0, 10);
-
-            products.forEach((product) => {
-                container.innerHTML += `
-            <div class="merch-container-card">
-                <img src="${product.image}" alt="${containerInfo.alt}" class="merch-img" >
-                <div class="merch-overlay-search">
-                    <a href="./src/detail/detail-products.html?id=${product.id}" class="circle">
-                        <img src="./public/search.svg" alt="other" class="merch-img-search">
-                    </a>
-                </div>
-
-                <div class="merch-overlay">
-                    <span class="merch-overlay-title"> ${product.name}</span>
-                    <span class="merch-overlay-sub"> ขนาด: ${product.size} </span>
-                    <div class="merch-overlay-sub-detail">
-                        <span class="merch-overlay-sub"> สี: ${product.color} </span>
-                        <span class="merch-overlay-sub"> ${product.price} บาท </span>
+            el.innerHTML = products
+                .map(
+                    (p) => `
+                    <div class="merch-container-card">
+                        <img src="${p.image}" alt="${p.type}" class="merch-img">
+                        <div class="merch-overlay-search">
+                            <a href="./src/detail/detail-products.html?id=${p.id}" class="circle">
+                                <img src="./public/search.svg" alt="search" class="merch-img-search">
+                            </a>
+                        </div>
+                        <div class="merch-overlay">
+                            <span class="merch-overlay-title">${p.name}</span>
+                            <span class="merch-overlay-sub">ขนาด: ${p.size}</span>
+                            <div class="merch-overlay-sub-detail">
+                                <span class="merch-overlay-sub">สี: ${p.color}</span>
+                                <span class="merch-overlay-sub">${p.price} บาท</span>
+                            </div>
+                            <a href="./src/detail/detail-products.html?id=${p.id}" class="merch-overlay-sub">ดูรายละเอียด</a>
+                        </div>
                     </div>
-                    <a href="./src/detail/detail-products.html?id=${product.id}" class="merch-overlay-sub">ดูรายละเอียด</a>
-                </div>
-            </div>
-            `;
-            });
+                `,
+                )
+                .join("");
+        });
+
+        document.querySelectorAll(".merch-scroll-wrapper").forEach((w) => {
+            const track = w.querySelector(".merch-container-body");
+            const btnL = w.querySelector(".merch-scroll-btn--left");
+            const btnR = w.querySelector(".merch-scroll-btn--right");
+
+            const update = () => {
+                const max = track.scrollWidth - track.clientWidth;
+                btnL.style.display =
+                    track.scrollLeft <= 1 ? "none" : "flex";
+                btnR.style.display =
+                    track.scrollLeft >= max - 1 ? "none" : "flex";
+            };
+
+            btnL.onclick = () => {
+                const card = track.querySelector(".merch-container-card");
+                const gap = parseFloat(getComputedStyle(track).gap) || 0;
+                track.scrollBy({
+                    left: -(card.offsetWidth + gap),
+                    behavior: "smooth",
+                });
+            };
+
+            btnR.onclick = () => {
+                const card = track.querySelector(".merch-container-card");
+                const gap = parseFloat(getComputedStyle(track).gap) || 0;
+                track.scrollBy({
+                    left: card.offsetWidth + gap,
+                    behavior: "smooth",
+                });
+            };
+
+            track.onscroll = update;
+            window.onresize = update;
+            update();
         });
     </script>
 </body>
