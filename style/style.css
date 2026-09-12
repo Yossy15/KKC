@@ -57,8 +57,12 @@ a {
     color: inherit;
 }
 
-p,
+p {
+    font-family: var(--font-krub);
+}
+
 .description-sub {
+    padding: 16px;
     font-family: var(--font-krub);
 }
 
@@ -174,6 +178,7 @@ main {
 
 .merch-container-card:hover .merch-img {
     transform: scale(1.06);
+    border-radius: 10px;
 }
 
 .merch-img {
@@ -238,7 +243,9 @@ main {
 }
 
 .merch-container-card:hover {
-    box-shadow: 0 0 4px var(--color-gray-dark);
+    box-shadow: 0 0 3px var(--color-gray-dark);
+    filter: grayscale(50%);
+    border-radius: 10px;
 }
 
 .merch-overlay-title {
@@ -651,7 +658,9 @@ td {
 
 .fitter-container-data {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); */
+    grid-template-columns: repeat(auto-fit, 200px);
+    justify-content: space-around;
     gap: 20px;
     padding: 16px 0;
 }
@@ -847,8 +856,10 @@ td {
     }
 
     .fitter-container-data {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 12px;
+        /* grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); */
+        grid-template-columns: repeat(auto-fit, 150px);
+        justify-content: space-around;
+        /* gap: 12px; */
     }
 
     .no-results {
