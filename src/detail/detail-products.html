@@ -11,18 +11,19 @@
 
 <body>
     <nav>
-        <a href="../../index.html" class="nav-container">
-            <img src="../../assets/logo.png" alt="logo" class="logo" />
+        <a href="../../index.html" class="nav-container" id="backButton">
+            <img src="../../assets/logo.png" alt="logo" class="logo desktop-only" />
+            <img src="../../public/arrow.svg" alt="arrow" class="back-arrow arrow-left mobile-only" />
         </a>
     </nav>
 
-    <section></section>
-    <div class="path-home-container">
-        <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
-        <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
-        <!-- <a href="../product/filter-mobile.html" class="path-text">Detail</a> -->
-        <a href="#" class="path-text">Detail</a>
-    </div>
+    <section>
+        <div class="path-home-container desktop-only">
+            <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <!-- <a href="../product/filter-mobile.html" class="path-text">Detail</a> -->
+            <a href="#" class="path-text">Detail</a>
+        </div>
     </section>
 
     <main class="product-container">
@@ -32,11 +33,11 @@
         <div class="product-info-main">
             <div class="colunm-flex">
                 <h1 class="title" id="productName">กำลังโหลด...</h1>
-                <p class="product-price" id="productPrice">(0 บาท)</p>
             </div>
             <div class="product-meta">
-                <span class="product-size" id="productSize">Size: -</span>
-                <span class="product-color" id="productColor">Color: -</span>
+                <span class="product-size" id="productSize">ขนาด: -</span>
+                <span class="product-color" id="productColor">สี: -</span>
+                <span class="product-price" id="productPrice">ราคา: -</span>
             </div>
         </div>
     </main>
@@ -83,22 +84,32 @@
                     <td id="infoPrice">-</td>
                 </tr>
                 <tr>
-                    <th>คงเหลือ</th>
-                    <td>มีสินค้าพร้อมส่ง</td>
+                    <th>สถานะ</th>
+                    <td id="infoStatus">-</td>
                 </tr>
             </table>
         </div>
     </section>
 
-    <section></section>
-    <footer>
-        <div class="footer-container">
-            <span class="footer-text"> © 2026 KAI KHONG CHAN </span>
-        </div>
-    </footer>
+    <section>
+        <footer>
+            <div class="footer-container">
+                <span class="footer-text"> © 2026 KAI KHONG CHAN </span>
+            </div>
+        </footer>
     </section>
 
     <script src="../../mockup/products.js"></script>
+
+    <script>
+        document.getElementById("backButton").addEventListener("click", function (e) {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                history.back();
+            }
+        });
+    </script>
+
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const productId = parseInt(urlParams.get("id"));
@@ -110,8 +121,8 @@
             document.getElementById("productImage").alt = product.name;
             document.getElementById("productName").textContent = product.name;
             document.getElementById("productPrice").textContent = `ราคา: ${product.price} บาท`;
-            document.getElementById("productSize").textContent = `Size: ${product.size}`;
-            document.getElementById("productColor").textContent = `Color: ${product.color}`;
+            document.getElementById("productSize").textContent = `ขนาด: ${product.size}`;
+            document.getElementById("productColor").textContent = `สี: ${product.color}`;
             document.getElementById("infoId").textContent = `P${String(product.id).padStart(5, "0")}`;
             document.getElementById("infoCategory").textContent =
                 { shirt: "เสื้อ", pants: "กางเกง", skirt: "กระโปรง", cap: "หมวก" }[product.type] || product.type;
@@ -119,6 +130,8 @@
             document.getElementById("infoSize").textContent = product.size;
             document.getElementById("infoColor").textContent = product.color;
             document.getElementById("infoPrice").textContent = `${product.price} บาท`;
+            document.getElementById("infoStatus").setAttribute("data-status", product.status);
+            document.getElementById("infoStatus").textContent = product.status;
         } else {
             document.getElementById("productName").textContent = "ไม่พบสินค้า";
             document.getElementById("productPrice").textContent = "กรุณาเลือกสินค้าใหม่";

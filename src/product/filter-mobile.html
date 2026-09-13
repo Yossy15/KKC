@@ -11,17 +11,18 @@
 
 <body>
     <nav>
-        <a href="../../index.html" class="nav-container">
-            <img src="../../assets/logo.png" alt="logo" class="logo" />
+        <a href="../../index.html" class="nav-container" id="backButton">
+            <img src="../../assets/logo.png" alt="logo" class="logo desktop-only" />
+            <img src="../../public/arrow.svg" alt="arrow" class="back-arrow arrow-left mobile-only" />
         </a>
     </nav>
 
-    <section></section>
-    <div class="path-home-container">
-        <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
-        <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
-        <a href="../product/filter-mobile.html" class="path-text">Filter</a>
-    </div>
+    <section>
+        <div class="path-home-container desktop-only">
+            <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <a href="../product/filter-mobile.html" class="path-text">Filter</a>
+        </div>
     </section>
 
     <section class="filter-wrapper">
@@ -79,6 +80,15 @@
         </div>
         </footer>
     </section>
+
+    <script>
+        document.getElementById("backButton").addEventListener("click", function (e) {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                history.back();
+            }
+        });
+    </script>
 
     <script>
         document.getElementById("filterForm").addEventListener("submit", function (e) {
