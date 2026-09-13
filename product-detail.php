@@ -156,7 +156,7 @@ include __DIR__ . '/includes/breadcrumb.php';
 
             <div class="product-actions-desktop">
                 <?php if ($product['status'] === 'พร้อมส่ง'): ?>
-                    <form method="POST" action="<?= base_url('cart.php') ?>" style="display: flex; gap: 12px; align-items: center; justify-content: center; margin-top: 8px;">
+                    <form method="POST" action="<?= base_url('cart.php') ?>" onsubmit="handleAddToCartAjax(event, this)" style="display: flex; gap: 12px; align-items: center; justify-content: center; margin-top: 8px;">
                         <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <input type="hidden" name="action" value="add">
                         <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
@@ -285,6 +285,50 @@ include __DIR__ . '/includes/breadcrumb.php';
             if (target) target.classList.add("active");
             if (button) button.classList.add("active");
         }
+
+        async function handleAddToCartAjax(event, form) {
+            event.preventDefault();
+            const btn = form.querySelector('button[type="submit"]');
+            if (btn) btn.disabled = true;
+            try {
+                const formData = new FormData(form);
+                const res = await fetch(form.action + '?ajax=1', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.require_login) {
+                    showAppConfirm('กรุณาเข้าสู่ระบบก่อนเพิ่มสินค้าลงในตะกร้า\nต้องการเข้าสู่ระบบตอนนี้หรือไม่?', 'จำเป็นต้องเข้าสู่ระบบ', {
+                        confirmText: 'เข้าสู่ระบบ',
+                        cancelText: 'ปิด'
+                    }).then(ok => {
+                        if (ok) {
+                            window.location.href = '<?= base_url('login.php?redirect=' . urlencode($_SERVER['REQUEST_URI'] ?? '')) ?>';
+                        }
+                    });
+                    return;
+                }
+                if (data.success) {
+                    const headerCartBadges = document.querySelectorAll('.nav-cart span, .mobile-footer-cart-badge');
+                    headerCartBadges.forEach(b => b.textContent = data.cart_count);
+                    
+                    showAppConfirm('เพิ่มสินค้าลงในตะกร้าเรียบร้อยแล้ว\nต้องการไปที่ตะกร้าสินค้าเพื่อสั่งซื้อหรือไม่?', 'เพิ่มสำเร็จ', {
+                        confirmText: 'ไปที่ตะกร้า',
+                        cancelText: 'เลือกซื้อต่อ'
+                    }).then(goCart => {
+                        if (goCart) {
+                            window.location.href = '<?= base_url('cart.php') ?>';
+                        }
+                    });
+                } else {
+                    showAppAlert(data.error || 'ไม่สามารถเพิ่มสินค้าลงในตะกร้าได้', 'แจ้งเตือน', 'error');
+                }
+            } catch (err) {
+                form.submit();
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
     </script>
 
     <!-- Mobile Bottom Action Bar (แทนที่ mobile-footer-tab-bar สำหรับหน้า Product Detail) -->
@@ -294,7 +338,7 @@ include __DIR__ . '/includes/breadcrumb.php';
                 <span class="product-mobile-price-label">ราคา</span>
                 <span class="product-mobile-price-val"><?= format_price($product['price']) ?></span>
             </div>
-            <form method="POST" action="<?= base_url('cart.php') ?>" class="product-mobile-form">
+            <form method="POST" action="<?= base_url('cart.php') ?>" onsubmit="handleAddToCartAjax(event, this)" class="product-mobile-form">
                 <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                 <input type="hidden" name="action" value="add">
                 <input type="hidden" name="product_id" value="<?= $product['id'] ?>">

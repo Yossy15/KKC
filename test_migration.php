@@ -76,6 +76,18 @@ assert(get_cart_count() === 0, "Cart should be empty after removal");
 $adminUser = find_user_by_login('kkc1');
 assert($adminUser !== null && $adminUser['role'] === 'admin', "kkc1 should have admin role");
 
+$_SESSION['user'] = $adminUser;
+assert(is_admin() === true, "Admin user should pass is_admin()");
+assert(is_logged_in() === true, "Admin user should pass is_logged_in()");
+
+$_SESSION['user'] = ['id' => 99, 'username' => 'regular', 'role' => 'user'];
+assert(is_admin() === false, "Regular user must fail is_admin()");
+assert(is_logged_in() === true, "Regular user should pass is_logged_in()");
+
+$_SESSION['user'] = null;
+assert(is_admin() === false, "Guest must fail is_admin()");
+assert(is_logged_in() === false, "Guest must fail is_logged_in()");
+
 echo "All checks passed successfully! (100% OK)\n";
 
 

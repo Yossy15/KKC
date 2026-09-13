@@ -64,6 +64,76 @@ function current_user(): ?array {
     return $_SESSION['user'] ?? null;
 }
 
+function is_admin(): bool {
+    $u = current_user();
+    return !empty($u) && ($u['role'] ?? '') === 'admin';
+}
+
+function require_login(?string $redirectUrl = null): void {
+    if (!is_logged_in()) {
+        $target = $redirectUrl ?? ($_SERVER['REQUEST_URI'] ?? base_url('index.php'));
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) || isset($_GET['ajax']) || isset($_POST['ajax'])) {
+            header('Content-Type: application/json', true, 401);
+            echo json_encode(['success' => false, 'error' => 'กรุณาเข้าสู่ระบบก่อนดำเนินการ', 'require_login' => true]);
+            exit;
+        }
+        header("Location: " . base_url('login.php?redirect=' . urlencode($target)));
+        exit;
+    }
+}
+
+function require_admin(): void {
+    if (!is_logged_in()) {
+        $target = $_SERVER['REQUEST_URI'] ?? base_url('admin.php');
+        header("Location: " . base_url('login.php?redirect=' . urlencode($target)));
+        exit;
+    }
+    if (!is_admin()) {
+        http_response_code(403);
+        $page_title = 'KKC - 403 เข้าถึงไม่ได้';
+        include __DIR__ . '/header.php';
+        echo '<main style="text-align: center; padding: 100px 20px; background: #fff; min-height: 80vh;"><h1 class="title">403 เข้าถึงไม่ได้</h1><p style="font-family: var(--font-krub); margin: 16px 0;">หน้านี้สงวนสิทธิ์สำหรับผู้ดูแลระบบ (Admin) เท่านั้น</p><a href="' . base_url('index.php') . '" class="auth-btn" style="max-width: 200px; display: inline-block; text-decoration: none;">กลับหน้าแรก</a></main>';
+        include __DIR__ . '/footer.php';
+        exit;
+    }
+}
+
+/**
+ * Path Guard Middleware
+ * ป้องกัน:
+ * 1. คนที่ไม่ใช่ admin ต้องเข้า admin ไม่ได้ (require_admin)
+ * 2. คนที่ยังไม่ login จะเข้า cart, profile และ path อื่นๆ ไม่ได้ นอกจาก home และ product
+ */
+function enforce_path_guard(): void {
+    if (php_sapi_name() === 'cli') {
+        return;
+    }
+
+    $script = basename(parse_url(str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? $_SERVER['PHP_SELF'] ?? ''), PHP_URL_PATH) ?? '');
+
+    // รายการหน้าที่อนุญาตให้เข้าถึงได้โดยไม่ต้องเข้าสู่ระบบ (Home, Product, Login, Logout)
+    $publicPages = [
+        'index.php',
+        'products.php',
+        'product-detail.php',
+        'login.php',
+        'logout.php'
+    ];
+
+    // 1. Admin Guard: คนที่ไม่ใช่ admin เข้า admin ไม่ได้
+    if ($script === 'admin.php') {
+        require_admin();
+        return;
+    }
+
+    // 2. Auth Guard: คนที่ยังไม่ login จะเข้า cart, profile และ path อื่นๆ ไม่ได้ นอกจาก home และ product
+    if (!in_array($script, $publicPages, true)) {
+        require_login();
+    }
+}
+
+enforce_path_guard();
+
 function login_user(array $user): void {
     // Security: regenerate session ID on privilege / login change
     session_regenerate_id(true);

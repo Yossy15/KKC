@@ -191,7 +191,7 @@ $badgeClassMap = [
                     <span>แผงควบคุมผู้ดูแลระบบ</span>
                 </a>
             <?php endif; ?>
-            <a href="<?= base_url('logout.php') ?>" class="profile-nav-btn logout" onclick="return confirm('คุณต้องการออกจากระบบหรือไม่?')" style="text-decoration: none;">
+            <a href="<?= base_url('logout.php') ?>" class="profile-nav-btn logout" onclick="event.preventDefault(); showAppConfirm('คุณต้องการออกจากระบบหรือไม่?', 'ยืนยันการออกจากระบบ').then(ok => { if (ok) window.location.href = this.href; });" style="text-decoration: none;">
                 <span>ออกจากระบบ</span>
             </a>
         </aside>
@@ -213,7 +213,7 @@ $badgeClassMap = [
                             ADMIN
                         </a>
                     <?php endif; ?>
-                    <a href="<?= base_url('logout.php') ?>" onclick="return confirm('คุณต้องการออกจากระบบหรือไม่?')" style="font-size: 12px; color: #888; font-family: var(--font-krub); text-decoration: underline;">
+                    <a href="<?= base_url('logout.php') ?>" onclick="event.preventDefault(); showAppConfirm('คุณต้องการออกจากระบบหรือไม่?', 'ยืนยันการออกจากระบบ').then(ok => { if (ok) window.location.href = this.href; });" style="font-size: 12px; color: #888; font-family: var(--font-krub); text-decoration: underline;">
                         ออกจากระบบ
                     </a>
                 </div>

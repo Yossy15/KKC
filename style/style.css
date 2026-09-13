@@ -764,6 +764,7 @@ td {
     background-color: var(--color-white);
     border-radius: 8px;
     padding: 32px 24px;
+    justify-content: start;
 }
 
 .auth-tabs {
@@ -1037,6 +1038,108 @@ dialog button[command="close"]:hover {
 dialog button[command="close"] img {
     width: 16px;
     height: 16px;
+}
+
+/* App Alert / Confirm Dialog (แทนที่ browser alert / confirm) */
+.app-alert-dialog {
+    width: 90%;
+    max-width: 380px;
+    border-radius: 12px;
+    padding: 0;
+    border: none;
+    background-color: var(--color-white);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.app-alert-card {
+    position: relative;
+    padding: 28px 24px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.app-alert-icon-box {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background-color: var(--color-gray-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    color: var(--color-black);
+}
+
+.app-alert-icon-box.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.app-alert-icon-box.warning {
+    background-color: #fff8e1;
+    color: #f57f17;
+}
+
+.app-alert-icon-box.error {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.app-alert-title {
+    font-family: var(--font-krub);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 8px;
+}
+
+.app-alert-message {
+    font-family: var(--font-krub);
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 22px;
+    white-space: pre-line;
+    word-break: break-word;
+}
+
+.app-alert-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+}
+
+.app-alert-btn-confirm {
+    flex: 1;
+    height: 42px;
+    margin: 0 !important;
+    font-size: 14px;
+}
+
+.app-alert-btn-cancel {
+    flex: 1;
+    height: 42px;
+    border: 1px solid #d0d0d0;
+    background-color: #fff;
+    color: #555;
+    font-family: var(--font-krub);
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-alert-btn-cancel:hover {
+    background-color: var(--color-gray-light);
+    color: var(--color-black);
 }
 
 .product-gallery-main {

@@ -8,7 +8,7 @@ $isProduct = in_array($currentScript, ['products.php', 'product-detail.php'], tr
 $isCart = ($currentScript === 'cart.php');
 $isProfile = in_array($currentScript, ['profile.php', 'login.php'], true);
 $footerCartCount = function_exists('get_cart_count') ? get_cart_count() : 0;
-$hasInnerTabBar = in_array($currentScript, ['profile.php', 'admin.php', 'product-detail.php'], true);
+$hasInnerTabBar = in_array($currentScript, ['profile.php', 'admin.php', 'product-detail.php', 'login.php'], true);
 ?>
     <!-- Desktop Footer (แสดงเป็น © 2026 KAI KHONG CHAN เหมือนเดิม) -->
     <section>
@@ -58,7 +58,140 @@ $hasInnerTabBar = in_array($currentScript, ['profile.php', 'admin.php', 'product
     </div>
     <?php endif; ?>
 
+    <!-- Global Alert / Confirm Dialog (แทนที่ browser alert / confirm) -->
+    <dialog id="appAlertDialog" class="app-alert-dialog">
+        <div class="app-alert-card">
+            <button commandfor="appAlertDialog" command="close" type="button" class="alert-close" onclick="handleAppAlertCancel()" style="position: absolute; top: 12px; right: 12px; background: #fff; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.15);">
+                <img src="<?= asset_url('public/close.svg') ?>" alt="close" style="width: 14px; height: 14px;" />
+            </button>
+            <div class="app-alert-icon-box" id="appAlertIconBox">
+                <svg id="appAlertIconSvg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            </div>
+            <h3 class="app-alert-title" id="appAlertTitle">แจ้งเตือน</h3>
+            <div class="app-alert-message" id="appAlertMessage">ข้อความแจ้งเตือน</div>
+            <div class="app-alert-actions" id="appAlertActions">
+                <button type="button" class="auth-btn app-alert-btn-confirm" id="appAlertConfirmBtn" onclick="handleAppAlertConfirm()">
+                    ตกลง
+                </button>
+                <button type="button" class="app-alert-btn-cancel" id="appAlertCancelBtn" style="display: none;" onclick="handleAppAlertCancel()">
+                    ยกเลิก
+                </button>
+            </div>
+        </div>
+    </dialog>
+
     <script>
+        // Global Custom Dialog (แทนที่ window.alert และ window.confirm)
+        let _appDialogResolve = null;
+
+        function showAppAlert(message, title = 'แจ้งเตือน', type = 'info') {
+            return new Promise((resolve) => {
+                _appDialogResolve = resolve;
+                const dialog = document.getElementById('appAlertDialog');
+                if (!dialog) {
+                    if (window.nativeAlert) window.nativeAlert(message);
+                    else console.log(message);
+                    resolve(true);
+                    return;
+                }
+
+                const titleEl = document.getElementById('appAlertTitle');
+                const msgEl = document.getElementById('appAlertMessage');
+                const cancelBtn = document.getElementById('appAlertCancelBtn');
+                const confirmBtn = document.getElementById('appAlertConfirmBtn');
+                const iconBox = document.getElementById('appAlertIconBox');
+
+                if (titleEl) titleEl.textContent = title;
+                if (msgEl) msgEl.textContent = message;
+                if (cancelBtn) cancelBtn.style.display = 'none';
+                if (confirmBtn) confirmBtn.textContent = 'ตกลง';
+
+                if (iconBox) {
+                    iconBox.className = 'app-alert-icon-box ' + type;
+                }
+
+                if (dialog.showModal) dialog.showModal();
+                else dialog.setAttribute('open', '');
+            });
+        }
+
+        function showAppConfirm(message, title = 'ยืนยันการทำรายการ', options = {}) {
+            return new Promise((resolve) => {
+                _appDialogResolve = resolve;
+                const dialog = document.getElementById('appAlertDialog');
+                if (!dialog) {
+                    const res = window.nativeConfirm ? window.nativeConfirm(message) : true;
+                    resolve(res);
+                    return;
+                }
+
+                const titleEl = document.getElementById('appAlertTitle');
+                const msgEl = document.getElementById('appAlertMessage');
+                const cancelBtn = document.getElementById('appAlertCancelBtn');
+                const confirmBtn = document.getElementById('appAlertConfirmBtn');
+                const iconBox = document.getElementById('appAlertIconBox');
+
+                if (titleEl) titleEl.textContent = title;
+                if (msgEl) msgEl.textContent = message;
+                if (cancelBtn) {
+                    cancelBtn.style.display = 'inline-flex';
+                    cancelBtn.textContent = options.cancelText || 'ยกเลิก';
+                }
+                if (confirmBtn) {
+                    confirmBtn.textContent = options.confirmText || 'ยืนยัน';
+                }
+
+                if (iconBox) {
+                    iconBox.className = 'app-alert-icon-box warning';
+                }
+
+                if (dialog.showModal) dialog.showModal();
+                else dialog.setAttribute('open', '');
+            });
+        }
+
+        function handleAppAlertConfirm() {
+            const dialog = document.getElementById('appAlertDialog');
+            if (dialog) {
+                if (dialog.close) dialog.close();
+                else dialog.removeAttribute('open');
+            }
+            if (_appDialogResolve) {
+                _appDialogResolve(true);
+                _appDialogResolve = null;
+            }
+        }
+
+        function handleAppAlertCancel() {
+            const dialog = document.getElementById('appAlertDialog');
+            if (dialog) {
+                if (dialog.close) dialog.close();
+                else dialog.removeAttribute('open');
+            }
+            if (_appDialogResolve) {
+                _appDialogResolve(false);
+                _appDialogResolve = null;
+            }
+        }
+
+        const appAlertDialogEl = document.getElementById('appAlertDialog');
+        if (appAlertDialogEl) {
+            appAlertDialogEl.addEventListener('click', (e) => {
+                if (e.target === appAlertDialogEl) handleAppAlertCancel();
+            });
+        }
+
+        // แทนที่ native window.alert
+        if (!window.nativeAlert) window.nativeAlert = window.alert;
+        window.alert = function(msg) {
+            showAppAlert(msg);
+        };
+        window.appAlert = showAppAlert;
+        window.appConfirm = showAppConfirm;
         const loginDialog = document.getElementById("loginDialog");
         if (loginDialog) {
             loginDialog.addEventListener("click", (e) => {

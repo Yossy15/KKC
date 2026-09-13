@@ -101,7 +101,7 @@ include __DIR__ . '/includes/header.php';
 ?>
 
 <main class="auth-wrapper" style="min-height: calc(100vh - 70px); padding: 0; margin: 0; width: 100%; max-width: 100%; display: flex; align-items: center; justify-content: center; background-color: var(--color-white);">
-    <div class="auth-container" style="width: 100%; max-width: 100%; min-height: calc(100vh - 70px); border-radius: 0; box-shadow: none; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px;">
+    <div class="auth-container" style="width: 100%; max-width: 100%; min-height: calc(100vh - 70px); border-radius: 0; box-shadow: none; display: flex; flex-direction: column; justify-content: start; align-items: center; padding: 40px 20px;">
         <div style="width: 100%; max-width: 460px;">
             <div class="auth-tabs">
                 <button type="button" class="auth-tab <?= $activeTab === 'login' ? 'active' : '' ?>" id="pageTabLoginBtn" onclick="switchPageAuthTab('login')">

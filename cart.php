@@ -19,9 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $prodId = (int)($_POST['product_id'] ?? 0);
         $qty = max(1, (int)($_POST['quantity'] ?? 1));
         if (add_to_cart($prodId, $qty)) {
+            if (isset($_GET['ajax']) || isset($_POST['ajax'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'cart_count' => get_cart_count()]);
+                exit;
+            }
             header("Location: " . base_url('cart.php'));
             exit;
         } else {
+            if (isset($_GET['ajax']) || isset($_POST['ajax'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'error' => 'ไม่สามารถเพิ่มสินค้านี้ลงตะกร้าได้']);
+                exit;
+            }
             $error = 'ไม่สามารถเพิ่มสินค้านี้ลงตะกร้าได้ (สินค้าอาจหมดหรือไม่มีจำหน่าย)';
         }
     } elseif ($action === 'update') {
@@ -149,7 +159,7 @@ include __DIR__ . '/includes/breadcrumb.php';
                                 <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                                 <input type="hidden" name="action" value="remove">
                                 <input type="hidden" name="product_id" value="<?= $item['id'] ?>">
-                                <button type="submit" style="background: none; border: none; cursor: pointer; padding: 4px;" title="ลบสินค้านี้">
+                                <button type="submit" onclick="event.preventDefault(); const f = this.form; showAppConfirm('คุณต้องการลบสินค้านี้ออกจากตะกร้าหรือไม่?', 'ยืนยันการลบสินค้า').then(ok => { if (ok) f.submit(); });" style="background: none; border: none; cursor: pointer; padding: 4px;" title="ลบสินค้านี้">
                                     <img src="<?= asset_url('public/close.svg') ?>" alt="remove" style="width: 16px; height: 16px; opacity: 0.5;" />
                                 </button>
                             </form>
