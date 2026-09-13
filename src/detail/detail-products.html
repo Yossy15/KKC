@@ -42,6 +42,9 @@
                 <span class="product-price" id="productPrice">ราคา: -</span>
             </div>
         </div>
+        <div class="product-gallery-main mobile-only">
+            <div class="product-gallery" id="productGallery"></div>
+        </div>
     </main>
 
     <section class="product-tab-container">
@@ -67,7 +70,9 @@
                 </tr>
                 <tr>
                     <th>หมวดหมู่</th>
-                    <td id="infoCategory">-</td>
+                    <td>
+                        <a href="#" id="infoCategory" style="color: var(--color-info);">-</a>
+                    </td>
                 </tr>
                 <tr>
                     <th>ชื่อสินค้า</th>
@@ -119,11 +124,51 @@
         const productId = parseInt(urlParams.get("id"));
         const product = mockProducts.find((p) => p.id === productId);
 
+        const productImage = document.getElementById("productImage");
+        const productGallery = document.getElementById("productGallery");
+
         if (product) {
             document.title = `KKC - ${product.name}`;
-            document.getElementById("productImage").src =
-                product.image.replace("./assets/", "../../assets/");
-            document.getElementById("productImage").alt = product.name;
+
+            const mainImage = product.image.replace("./assets/", "../../assets/");
+
+            productImage.src = mainImage;
+            productImage.alt = product.name;
+
+            productGallery.innerHTML = product.gallery
+                .map((image, index) => {
+                    const imagePath = image.replace("./assets/", "../../assets/");
+
+                    return `
+                <img
+                    src="${imagePath}"
+                    alt="${product.name}"
+                    class="product-gallery-image ${index === 0 ? "active" : ""}"
+                    data-image="${imagePath}"
+                />
+            `;
+                })
+                .join("");
+            productGallery
+                .querySelectorAll(".product-gallery-image")
+                .forEach((image) => {
+                    image.addEventListener("click", () => {
+
+                        // เปลี่ยนรูปหลัก
+                        productImage.src = image.dataset.image;
+
+                        // เอา active ออกจากรูปอื่น
+                        productGallery
+                            .querySelectorAll(".product-gallery-image")
+                            .forEach((img) => {
+                                img.classList.remove("active");
+                            });
+
+                        // เพิ่ม active ให้รูปที่กด
+                        image.classList.add("active");
+                    });
+                });
+
             document.getElementById("productName").textContent =
                 product.name;
             document.getElementById("productPrice").textContent =
@@ -141,8 +186,16 @@
                     skirt: "กระโปรง",
                     cap: "หมวก",
                 }[product.type] || product.type;
-            document.getElementById("infoName").textContent = product.name;
-            document.getElementById("infoSize").textContent = product.size;
+            document
+                .getElementById("infoCategory")
+                .setAttribute(
+                    "href",
+                    "../product/filter-products.html?type=" + product.type
+                );
+            document.getElementById("infoName").textContent =
+                product.name;
+            document.getElementById("infoSize").textContent =
+                product.size;
             document.getElementById("infoColor").textContent =
                 product.color;
             document.getElementById("infoPrice").textContent =
@@ -152,8 +205,6 @@
                 .setAttribute("data-status", product.status);
             document.getElementById("infoStatus").textContent =
                 product.status;
-
-            // Show sold overlay if status is "ขายแล้ว"
             if (product.status === "ขายแล้ว") {
                 document.getElementById("soldOverlay").style.display =
                     "block";
@@ -164,11 +215,7 @@
             document.getElementById("productPrice").textContent =
                 "กรุณาเลือกสินค้าใหม่";
             setTimeout(() => {
-                if (
-                    confirm(
-                        "ไม่พบสินค้าที่ต้องการ\nต้องการกลับไปหน้าแรกหรือไม่?",
-                    )
-                ) {
+                if (confirm("ไม่พบสินค้าที่ต้องการ\nต้องการกลับไปหน้าแรกหรือไม่?")) {
                     window.location.href = "../../index.html";
                 }
             }, 500);

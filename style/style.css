@@ -143,6 +143,7 @@ main {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
+    width: 100vw;
     gap: 16px;
     padding: 20px 20px 24px;
     overflow-x: auto;
@@ -820,6 +821,70 @@ dialog button[command="close"]:hover {
 dialog button[command="close"] img {
     width: 16px;
     height: 16px;
+}
+
+.product-gallery-main {
+    width: 100%;
+    overflow: hidden;
+
+}
+
+.product-gallery {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-behavior: smooth;
+
+    /* Mobile */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+
+    /* ซ่อน scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.product-gallery::-webkit-scrollbar {
+    display: none;
+}
+
+.product-gallery-image {
+    /* สำคัญ: ห้ามให้รูปถูกบีบ */
+    flex: 0 0 80px;
+
+    width: 80px;
+    height: 80px;
+
+    object-fit: cover;
+
+    cursor: pointer;
+
+    opacity: 0.6;
+
+    border-radius: 4px;
+
+    transition:
+        opacity 0.2s,
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+
+.product-gallery-image:hover {
+    opacity: 1;
+}
+
+.product-gallery-image.active {
+    opacity: 1;
+
+    border-bottom: 3px solid var(--color-gray-dark);
+    border-right: 1px solid var(--color-gray-dark);
+    border-bottom-right-radius: 10px;
 }
 
 @media (max-width: 768px) {

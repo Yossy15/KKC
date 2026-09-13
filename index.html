@@ -169,12 +169,20 @@
 
         containers.forEach((c) => {
             const el = document.getElementById(c.id);
+            // const products = mockProducts
+            //     .filter((p) =>
+            //         Array.isArray(c.type)
+            //             ? c.type.includes(p.type)
+            //             : p.type === c.type
+            //     )
+            //     .slice(0, 10);
             const products = mockProducts
                 .filter((p) =>
                     Array.isArray(c.type)
                         ? c.type.includes(p.type)
                         : p.type === c.type
                 )
+                .filter((p) => p.status !== "ขายแล้ว")
                 .slice(0, 10);
             el.innerHTML = products
                 .map(
