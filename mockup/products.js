@@ -28,7 +28,7 @@ for (let i = 1; i <= 100; i++) {
     id: i,
     type: productType.type,
     image: productType.image,
-    gallery: [productType.image, randomGallery, productType.image, randomGallery],
+    gallery: [productType.image, randomGallery, productType.image, randomGallery, productType.image, randomGallery, productType.image, randomGallery, productType.image, randomGallery, productType.image, randomGallery],
     name: `${productType.name} #${i}`,
     size: randomSize,
     price: randomPrice,

@@ -296,7 +296,8 @@ main {
     align-items: center;
 }
 
-.merch-scroll-btn {
+.merch-scroll-btn,
+.scroll-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -316,19 +317,23 @@ main {
     transition: transform 0.15s ease;
 }
 
-.merch-scroll-btn:hover {
+.merch-scroll-btn:hover,
+.scroll-btn:hover {
     background-color: var(--color-gray-dark);
 }
 
-.merch-scroll-btn:active {
+.merch-scroll-btn:active,
+.scroll-btn:active {
     transform: translateY(-50%) scale(0.9);
 }
 
-.merch-scroll-btn--left {
+.merch-scroll-btn--left,
+.scroll-btn--left {
     left: 6px;
 }
 
-.merch-scroll-btn--right {
+.merch-scroll-btn--right,
+.scroll-btn--right {
     right: 6px;
 }
 
@@ -506,6 +511,7 @@ main {
     font-family: var(--font-krub);
     font-size: 16px;
     color: var(--color-gray-dark);
+    justify-content: center;
 }
 
 .product-tabs {
@@ -566,7 +572,7 @@ td {
 
 .colunm-flex {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     gap: 20px;
 }
@@ -824,9 +830,10 @@ dialog button[command="close"] img {
 }
 
 .product-gallery-main {
+    position: relative;
+    display: flex;
+    align-items: center;
     width: 100%;
-    overflow: hidden;
-
 }
 
 .product-gallery {
@@ -951,17 +958,20 @@ dialog button[command="close"] img {
         font-size: 11px;
     }
 
-    .merch-scroll-btn {
+    .merch-scroll-btn,
+    .scroll-btn {
         width: 32px;
         height: 32px;
         font-size: 18px;
     }
 
-    .merch-scroll-btn--left {
+    .merch-scroll-btn--left,
+    .scroll-btn--left {
         left: 4px;
     }
 
-    .merch-scroll-btn--right {
+    .merch-scroll-btn--right,
+    .scroll-btn--right {
         right: 4px;
     }
 

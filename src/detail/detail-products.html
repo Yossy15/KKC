@@ -36,15 +36,18 @@
             <div class="colunm-flex">
                 <h1 class="title" id="productName">กำลังโหลด...</h1>
             </div>
+            <div class="product-gallery-main">
+                <button class="scroll-btn scroll-btn--left" id="galleryScrollLeft" aria-label="เลื่อนซ้าย" style="display: none;">&#8249;</button>
+                <div class="product-gallery" id="productGallery"></div>
+                <button class="scroll-btn scroll-btn--right" id="galleryScrollRight" aria-label="เลื่อนขวา" style="display: none;">&#8250;</button>
+            </div>
             <div class="product-meta">
                 <span class="product-size" id="productSize">ขนาด: -</span>
                 <span class="product-color" id="productColor">สี: -</span>
                 <span class="product-price" id="productPrice">ราคา: -</span>
             </div>
         </div>
-        <div class="product-gallery-main mobile-only">
-            <div class="product-gallery" id="productGallery"></div>
-        </div>
+
     </main>
 
     <section class="product-tab-container">
@@ -126,6 +129,46 @@
 
         const productImage = document.getElementById("productImage");
         const productGallery = document.getElementById("productGallery");
+        const galleryBtnL = document.getElementById("galleryScrollLeft");
+        const galleryBtnR = document.getElementById("galleryScrollRight");
+
+        let currentGalleryIndex = 0;
+        let galleryImages = [];
+
+        function updateGalleryButtons() {
+            if (!galleryBtnL || !galleryBtnR) return;
+            if (galleryImages.length <= 1) {
+                galleryBtnL.style.display = "none";
+                galleryBtnR.style.display = "none";
+                return;
+            }
+            galleryBtnL.style.display = currentGalleryIndex <= 0 ? "none" : "flex";
+            galleryBtnR.style.display = currentGalleryIndex >= galleryImages.length - 1 ? "none" : "flex";
+        }
+
+        function selectGalleryImage(index) {
+            if (!galleryImages.length) return;
+            currentGalleryIndex = Math.max(0, Math.min(index, galleryImages.length - 1));
+
+            const activeThumb = galleryImages[currentGalleryIndex];
+            productImage.src = activeThumb.dataset.image;
+
+            galleryImages.forEach((img) => img.classList.remove("active"));
+            activeThumb.classList.add("active");
+
+            const left = activeThumb.offsetLeft - (productGallery.clientWidth / 2) + (activeThumb.offsetWidth / 2);
+            productGallery.scrollTo({
+                left: Math.max(0, left),
+                behavior: "smooth",
+            });
+
+            updateGalleryButtons();
+        }
+
+        if (galleryBtnL && galleryBtnR) {
+            galleryBtnL.onclick = () => selectGalleryImage(currentGalleryIndex - 1);
+            galleryBtnR.onclick = () => selectGalleryImage(currentGalleryIndex + 1);
+        }
 
         if (product) {
             document.title = `KKC - ${product.name}`;
@@ -135,48 +178,48 @@
             productImage.src = mainImage;
             productImage.alt = product.name;
 
-            productGallery.innerHTML = product.gallery
-                .map((image, index) => {
-                    const imagePath = image.replace("./assets/", "../../assets/");
+            if (Array.isArray(product.gallery) && product.gallery.length > 0) {
+                productGallery.innerHTML = product.gallery
+                    .map((image, index) => {
+                        const imagePath = image.replace(
+                            "./assets/",
+                            "../../assets/"
+                        );
 
-                    return `
-                <img
-                    src="${imagePath}"
-                    alt="${product.name}"
-                    class="product-gallery-image ${index === 0 ? "active" : ""}"
-                    data-image="${imagePath}"
-                />
-            `;
-                })
-                .join("");
-            productGallery
-                .querySelectorAll(".product-gallery-image")
-                .forEach((image) => {
+                        return `
+                    <img
+                        src="${imagePath}"
+                        alt="${product.name}"
+                        class="product-gallery-image ${index === 0 ? "active" : ""}"
+                        data-image="${imagePath}"
+                    />
+                `;
+                    })
+                    .join("");
+
+                galleryImages = Array.from(productGallery.querySelectorAll(".product-gallery-image"));
+                galleryImages.forEach((image, index) => {
                     image.addEventListener("click", () => {
-
-                        // เปลี่ยนรูปหลัก
-                        productImage.src = image.dataset.image;
-
-                        // เอา active ออกจากรูปอื่น
-                        productGallery
-                            .querySelectorAll(".product-gallery-image")
-                            .forEach((img) => {
-                                img.classList.remove("active");
-                            });
-
-                        // เพิ่ม active ให้รูปที่กด
-                        image.classList.add("active");
+                        selectGalleryImage(index);
                     });
                 });
+
+                selectGalleryImage(0);
+            } else {
+                // ไม่มี Gallery → ค่าว่าง
+                productGallery.innerHTML = "";
+                galleryImages = [];
+                updateGalleryButtons();
+            }
 
             document.getElementById("productName").textContent =
                 product.name;
             document.getElementById("productPrice").textContent =
                 `ราคา: ${product.price} บาท`;
             document.getElementById("productSize").textContent =
-                `ขนาด: ${product.size}`;
+                `ขนาด: ${product.size || "-"}`;
             document.getElementById("productColor").textContent =
-                `สี: ${product.color}`;
+                `สี: ${product.color || "-"}`;
             document.getElementById("infoId").textContent =
                 `P${String(product.id).padStart(5, "0")}`;
             document.getElementById("infoCategory").textContent =
