@@ -33,6 +33,18 @@
             <section class="fitter">
                 <div class="divider-head">
                     <h1 class="title">FILTER</h1>
+                    <section>
+                        <button class="size-chart" command="show-modal" commandfor="my-dialog">
+                            ตารางไซส์
+                        </button>
+
+                        <dialog id="my-dialog">
+                            <button commandfor="my-dialog" command="close">
+                                <img src="../../public/close.svg" alt="close" />
+                            </button>
+                            <img src="../../assets/size-chart.png" alt="size-chart" class="size-chart-img" />
+                        </dialog>
+                    </section>
                 </div>
 
                 <form id="filterForm">
@@ -53,8 +65,10 @@
                     <div class="filter-section">
                         <h3>สถานะ</h3>
                         <div class="checkbox-form">
-                            <label><input type="checkbox" name="status" value="ขายแล้ว" /> ขายแล้ว</label>
-                            <label><input type="checkbox" name="status" value="พร้อมส่ง" /> พร้อมส่ง</label>
+                            <label><input type="checkbox" name="status" value="ขายแล้ว" />
+                                ขายแล้ว</label>
+                            <label><input type="checkbox" name="status" value="พร้อมส่ง" />
+                                พร้อมส่ง</label>
                         </div>
                     </div>
 
@@ -238,45 +252,61 @@
             container.appendChild(next);
         }
 
+        // Load from localStorage or URL
+        const savedFilters = localStorage.getItem("filterState");
         const urlParams = new URLSearchParams(window.location.search);
-        urlParams.forEach((value, key) => {
-            document
-                .querySelectorAll(`input[name="${key}"][value="${value}"]`)
-                .forEach((cb) => (cb.checked = true));
+
+        let filters = {
+            product: [],
+            size: [],
+            price: [],
+            status: [],
+        };
+
+        // Priority: localStorage > URL > default
+        if (savedFilters) {
+            filters = JSON.parse(savedFilters);
+        } else if (urlParams.toString()) {
+            filters.product = urlParams.getAll("product");
+            filters.size = urlParams.getAll("size");
+            filters.price = urlParams.getAll("price");
+            filters.status = urlParams.getAll("status");
+        }
+
+        // Default: พร้อมส่ง if no status selected
+        if (filters.status.length === 0) {
+            filters.status = ["พร้อมส่ง"];
+        }
+
+        // Check checkboxes based on filters
+        Object.keys(filters).forEach((key) => {
+            filters[key].forEach((value) => {
+                document
+                    .querySelectorAll(
+                        `input[name="${key}"][value="${value}"]`,
+                    )
+                    .forEach((cb) => (cb.checked = true));
+            });
         });
 
-        if (urlParams.toString()) {
-            const formData = new FormData(
-                document.getElementById("filterForm"),
-            );
-            const filters = {
-                product: formData.getAll("product"),
-                size: formData.getAll("size"),
-                price: formData.getAll("price"),
-                status: formData.getAll("status"),
-            };
-            filteredProducts = allProducts.filter((p) => {
-                if (
-                    filters.product.length &&
-                    !filters.product.includes(p.type)
-                )
-                    return false;
-                if (filters.size.length && !filters.size.includes(p.size))
-                    return false;
-                if (filters.status.length && !filters.status.includes(p.status))
-                    return false;
-                if (
-                    filters.price.length &&
-                    !filters.price.includes(String(p.price))
-                )
-                    return false;
-                return true;
-            });
-        } else {
-            filteredProducts = allProducts.filter(
-                (p) => p.status === "พร้อมส่ง"
-            );
-        }
+        // Apply filters
+        filteredProducts = allProducts.filter((p) => {
+            if (filters.product.length && !filters.product.includes(p.type))
+                return false;
+            if (filters.size.length && !filters.size.includes(p.size))
+                return false;
+            if (filters.status.length && !filters.status.includes(p.status))
+                return false;
+            if (
+                filters.price.length &&
+                !filters.price.includes(String(p.price))
+            )
+                return false;
+            return true;
+        });
+
+        // Save to localStorage
+        localStorage.setItem("filterState", JSON.stringify(filters));
 
         renderProducts(filteredProducts, currentPage);
 
@@ -291,30 +321,38 @@
                     const formData = new FormData(
                         document.getElementById("filterForm"),
                     );
-                    const filters = {
+                    const newFilters = {
                         product: formData.getAll("product"),
                         size: formData.getAll("size"),
                         price: formData.getAll("price"),
                         status: formData.getAll("status"),
                     };
 
+                    // Save to localStorage
+                    localStorage.setItem(
+                        "filterState",
+                        JSON.stringify(newFilters),
+                    );
+
                     filteredProducts = allProducts.filter((p) => {
                         if (
-                            filters.product.length &&
-                            !filters.product.includes(p.type)
-                        )
-                            return false;
-                        if (filters.status.length &&
-                            !filters.status.includes(String(p.status)))
-                            return false;
-                        if (
-                            filters.size.length &&
-                            !filters.size.includes(String(p.size))
+                            newFilters.product.length &&
+                            !newFilters.product.includes(p.type)
                         )
                             return false;
                         if (
-                            filters.price.length &&
-                            !filters.price.includes(String(p.price))
+                            newFilters.status.length &&
+                            !newFilters.status.includes(p.status)
+                        )
+                            return false;
+                        if (
+                            newFilters.size.length &&
+                            !newFilters.size.includes(p.size)
+                        )
+                            return false;
+                        if (
+                            newFilters.price.length &&
+                            !newFilters.price.includes(String(p.price))
                         )
                             return false;
                         return true;
