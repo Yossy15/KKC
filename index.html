@@ -21,8 +21,35 @@
             <section>
                 <section>
                     <div class="merch-container">
+                        <h1 class="title">ALL PRODUCTS</h1>
+                        <a class="arrow-btn"
+                            href="./src/product/filter-products.html?product=shirt&product=pants&product=skirt&product=cap"
+                            aria-label="เพิ่มเติม">
+                            <span class="arrow-btn-text">เพิ่มเติม</span>
+                            <span class="arrow-btn-icon">&#8250;</span>
+                        </a>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="merch-scroll-wrapper">
+                        <button class="merch-scroll-btn merch-scroll-btn--left" aria-label="เลื่อนซ้าย">
+                            &#8249;
+                        </button>
+                        <div class="merch-container-body" id="merch-container-all"></div>
+                        <button class="merch-scroll-btn merch-scroll-btn--right" aria-label="เลื่อนขวา">
+                            &#8250;
+                        </button>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <div class="merch-container">
                         <h1 class="title">T-SHIRT</h1>
-                        <a class="arrow-btn" href="./src/product/filter-products.html" aria-label="เพิ่มเติม">
+                        <a class="arrow-btn" href="./src/product/filter-products.html?product=shirt"
+                            aria-label="เพิ่มเติม">
                             <span class="arrow-btn-text">เพิ่มเติม</span>
                             <span class="arrow-btn-icon">&#8250;</span>
                         </a>
@@ -46,7 +73,8 @@
                 <section>
                     <div class="merch-container">
                         <h1 class="title">PANTS</h1>
-                        <a class="arrow-btn" href="./src/product/filter-products.html" aria-label="เพิ่มเติม">
+                        <a class="arrow-btn" href="./src/product/filter-products.html?product=pants"
+                            aria-label="เพิ่มเติม">
                             <span class="arrow-btn-text">เพิ่มเติม</span>
                             <span class="arrow-btn-icon">&#8250;</span>
                         </a>
@@ -70,7 +98,8 @@
                 <section>
                     <div class="merch-container">
                         <h1 class="title">SKIRTS</h1>
-                        <a class="arrow-btn" href="./src/product/filter-products.html" aria-label="เพิ่มเติม">
+                        <a class="arrow-btn" href="./src/product/filter-products.html?product=skirt"
+                            aria-label="เพิ่มเติม">
                             <span class="arrow-btn-text">เพิ่มเติม</span>
                             <span class="arrow-btn-icon">&#8250;</span>
                         </a>
@@ -94,7 +123,8 @@
                 <section>
                     <div class="merch-container">
                         <h1 class="title">CAPS</h1>
-                        <a class="arrow-btn" href="./src/product/filter-products.html" aria-label="เพิ่มเติม">
+                        <a class="arrow-btn" href="./src/product/filter-products.html?product=cap"
+                            aria-label="เพิ่มเติม">
                             <span class="arrow-btn-text">เพิ่มเติม</span>
                             <span class="arrow-btn-icon">&#8250;</span>
                         </a>
@@ -126,23 +156,40 @@
 
     <script src="./mockup/products.js"></script>
     <script>
+        localStorage.removeItem("filterState");
+    </script>
+    <script>
         const containers = [
             { id: "merch-container-shirt", type: "shirt" },
             { id: "merch-container-pants", type: "pants" },
             { id: "merch-container-skirts", type: "skirt" },
             { id: "merch-container-cap", type: "cap" },
+            { id: "merch-container-all", type: ["shirt", "pants", "skirt", "cap"] }
         ];
 
         containers.forEach((c) => {
             const el = document.getElementById(c.id);
+            // const products = mockProducts
+            //     .filter((p) =>
+            //         Array.isArray(c.type)
+            //             ? c.type.includes(p.type)
+            //             : p.type === c.type
+            //     )
+            //     .slice(0, 10);
             const products = mockProducts
-                .filter((p) => p.type === c.type)
+                .filter((p) =>
+                    Array.isArray(c.type)
+                        ? c.type.includes(p.type)
+                        : p.type === c.type
+                )
+                .filter((p) => p.status !== "ขายแล้ว")
                 .slice(0, 10);
             el.innerHTML = products
                 .map(
                     (p) => `
                     <div class="merch-container-card">
                         <img src="${p.image}" alt="${p.type}" class="merch-img">
+                        ${p.status === "ขายแล้ว" ? '<img src="./assets/sell.png" alt="sold" class="sold-overlay">' : ""}
                         <div class="merch-overlay-search">
                             <a href="./src/detail/detail-products.html?id=${p.id}" class="circle">
                                 <img src="./public/search.svg" alt="search" class="merch-img-search">

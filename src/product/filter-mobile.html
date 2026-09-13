@@ -11,22 +11,37 @@
 
 <body>
     <nav>
-        <a href="../../index.html" class="nav-container">
-            <img src="../../assets/logo.png" alt="logo" class="logo" />
+        <a href="../../index.html" class="nav-container" id="backButton">
+            <img src="../../assets/logo.png" alt="logo" class="logo desktop-only" />
+            <img src="../../public/arrow.svg" alt="arrow" class="back-arrow arrow-left mobile-only" />
         </a>
     </nav>
 
-    <section></section>
-    <div class="path-home-container">
-        <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
-        <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
-        <a href="../product/filter-mobile.html" class="path-text">Filter</a>
-    </div>
+    <section>
+        <div class="path-home-container desktop-only">
+            <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <a href="../product/filter-mobile.html" class="path-text">Filter</a>
+        </div>
     </section>
 
     <section class="filter-wrapper">
         <div class="filter-container">
-            <h1 class="title">FILTER</h1>
+            <div class="divider-head">
+                <h1 class="title">FILTER</h1>
+                <section>
+                    <button class="size-chart" command="show-modal" commandfor="my-dialog">
+                        ตารางไซส์
+                    </button>
+
+                    <dialog id="my-dialog">
+                        <button commandfor="my-dialog" command="close">
+                            <img src="../../public/close.svg" alt="close" />
+                        </button>
+                        <img src="../../assets/size-chart.png" alt="size-chart" class="size-chart-img" />
+                    </dialog>
+                </section>
+            </div>
 
             <form id="filterForm">
                 <div class="filter-section">
@@ -40,11 +55,10 @@
                 </div>
 
                 <div class="filter-section">
-                    <h3>ขนาด</h3>
+                    <h3>สถานะ</h3>
                     <div class="checkbox-form">
-                        <label><input type="checkbox" name="size" value="S" /> S</label>
-                        <label><input type="checkbox" name="size" value="M" /> M</label>
-                        <label><input type="checkbox" name="size" value="L" /> L</label>
+                        <label><input type="checkbox" name="status" value="ขายแล้ว" /> ขายแล้ว</label>
+                        <label><input type="checkbox" name="status" value="พร้อมส่ง" /> พร้อมส่ง</label>
                     </div>
                 </div>
 
@@ -81,9 +95,63 @@
     </section>
 
     <script>
+        document.getElementById("backButton").addEventListener("click", function (e) {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                history.back();
+            }
+        });
+    </script>
+
+    <script>
+        // Load filters from localStorage or URL
+        const savedFilters = localStorage.getItem('filterState');
+        const urlParams = new URLSearchParams(window.location.search);
+
+        let filters = {
+            product: [],
+            size: [],
+            price: [],
+            status: []
+        };
+
+        // Priority: localStorage > URL > default
+        if (savedFilters) {
+            filters = JSON.parse(savedFilters);
+        } else if (urlParams.toString()) {
+            filters.product = urlParams.getAll('product');
+            filters.size = urlParams.getAll('size');
+            filters.price = urlParams.getAll('price');
+            filters.status = urlParams.getAll('status');
+        }
+
+        // Default: พร้อมส่ง if no status selected
+        if (filters.status.length === 0) {
+            filters.status = ['พร้อมส่ง'];
+        }
+
+        // Check checkboxes based on filters
+        Object.keys(filters).forEach(key => {
+            filters[key].forEach(value => {
+                document.querySelectorAll(`input[name="${key}"][value="${value}"]`)
+                    .forEach(cb => cb.checked = true);
+            });
+        });
+
         document.getElementById("filterForm").addEventListener("submit", function (e) {
             e.preventDefault();
-            const params = new URLSearchParams(new FormData(this));
+            const formData = new FormData(this);
+            const newFilters = {
+                product: formData.getAll('product'),
+                size: formData.getAll('size'),
+                price: formData.getAll('price'),
+                status: formData.getAll('status')
+            };
+
+            // Save to localStorage
+            localStorage.setItem('filterState', JSON.stringify(newFilters));
+
+            const params = new URLSearchParams(formData);
             window.location.href = "./filter-products.html?" + params.toString();
         });
     </script>
