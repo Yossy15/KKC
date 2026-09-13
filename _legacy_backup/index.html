@@ -14,6 +14,12 @@
         <a href="index.html" class="nav-container">
             <img src="./assets/logo.png" alt="logo" class="logo" />
         </a>
+        <div class="nav-icon-group">
+            <a href="#" class="nav-cart">
+                <img src="./public/cart.svg" alt="cart">
+            </a>
+            <div id="profile-container"></div>
+        </div>
     </nav>
 
     <section>
@@ -154,7 +160,200 @@
         </footer>
     </section>
 
+    <dialog id="loginDialog">
+        <button commandfor="loginDialog" command="close" type="button" onclick="document.getElementById('loginDialog').close()">
+            <img src="./public/close.svg" alt="close" />
+        </button>
+        <div class="auth-container" style="max-width: 420px; box-shadow: none;">
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab active" id="modalTabLoginBtn" onclick="switchModalAuthTab('login')">
+                    เข้าสู่ระบบ
+                </button>
+                <button type="button" class="auth-tab" id="modalTabRegisterBtn" onclick="switchModalAuthTab('register')">
+                    สมัครสมาชิก
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="modalLoginForm" class="auth-form" onsubmit="handleModalLogin(event)">
+                <div class="auth-field">
+                    <label for="modalLoginUser">ชื่อผู้ใช้ หรือ อีเมล</label>
+                    <input type="text" id="modalLoginUser" class="auth-input" placeholder="เช่น kkc1 หรือ kkc1@g.co" required />
+                </div>
+                <div class="auth-field">
+                    <label for="modalLoginPass">รหัสผ่าน</label>
+                    <input type="password" id="modalLoginPass" class="auth-input" placeholder="รหัสผ่าน" required />
+                </div>
+                <div id="modalLoginError" class="auth-error"></div>
+                <button type="submit" class="auth-btn">เข้าสู่ระบบ</button>
+                <div class="auth-switch-text">
+                    ยังไม่มีบัญชี? <a onclick="switchModalAuthTab('register')">สมัครสมาชิก</a>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="modalRegisterForm" class="auth-form" style="display: none;" onsubmit="handleModalRegister(event)">
+                <div class="auth-field">
+                    <label for="modalRegName">ชื่อ - นามสกุล</label>
+                    <input type="text" id="modalRegName" class="auth-input" placeholder="เช่น สมชาย ใจดี" required />
+                </div>
+                <div class="auth-field">
+                    <label for="modalRegUsername">ชื่อผู้ใช้</label>
+                    <input type="text" id="modalRegUsername" class="auth-input" placeholder="เช่น somchai99" required />
+                </div>
+                <div class="auth-field">
+                    <label for="modalRegEmail">อีเมล</label>
+                    <input type="email" id="modalRegEmail" class="auth-input" placeholder="เช่น somchai@example.com" required />
+                </div>
+                <div class="auth-field">
+                    <label for="modalRegPhone">เบอร์โทรศัพท์</label>
+                    <input type="tel" id="modalRegPhone" class="auth-input" placeholder="เช่น 0812345678" required />
+                </div>
+                <div class="auth-field">
+                    <label for="modalRegPass">รหัสผ่าน</label>
+                    <input type="password" id="modalRegPass" class="auth-input" placeholder="อย่างน้อย 4 ตัวอักษร" minlength="4" required />
+                </div>
+                <div class="auth-field">
+                    <label for="modalRegConfirmPass">ยืนยันรหัสผ่าน</label>
+                    <input type="password" id="modalRegConfirmPass" class="auth-input" placeholder="กรอกรหัสผ่านอีกครั้ง" required />
+                </div>
+                <div id="modalRegisterError" class="auth-error"></div>
+                <button type="submit" class="auth-btn">สมัครสมาชิก</button>
+                <div class="auth-switch-text">
+                    มีบัญชีอยู่แล้ว? <a onclick="switchModalAuthTab('login')">เข้าสู่ระบบ</a>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
     <script src="./mockup/products.js"></script>
+    <script src="./mockup/user.js"></script>
+    <script>
+        const profileContainer = document.getElementById("profile-container");
+        const profileImg = document.createElement("img");
+        const buttonLogin = document.createElement("button");
+        const loginDialog = document.getElementById("loginDialog");
+
+        if (loginDialog) {
+            loginDialog.addEventListener("click", (e) => {
+                if (e.target === loginDialog) loginDialog.close();
+            });
+        }
+
+        function switchModalAuthTab(tab) {
+            const loginForm = document.getElementById("modalLoginForm");
+            const regForm = document.getElementById("modalRegisterForm");
+            const tabLogin = document.getElementById("modalTabLoginBtn");
+            const tabReg = document.getElementById("modalTabRegisterBtn");
+            document.getElementById("modalLoginError").style.display = "none";
+            document.getElementById("modalRegisterError").style.display = "none";
+
+            if (tab === "register") {
+                loginForm.style.display = "none";
+                regForm.style.display = "flex";
+                tabLogin.classList.remove("active");
+                tabReg.classList.add("active");
+            } else {
+                loginForm.style.display = "flex";
+                regForm.style.display = "none";
+                tabLogin.classList.add("active");
+                tabReg.classList.remove("active");
+            }
+        }
+
+        function handleModalLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById("modalLoginUser").value.trim().toLowerCase();
+            const p = document.getElementById("modalLoginPass").value;
+            const err = document.getElementById("modalLoginError");
+            err.style.display = "none";
+
+            const localUsers = JSON.parse(localStorage.getItem("users") || "[]");
+            let found = localUsers.find(
+                (x) => (x.username.toLowerCase() === u || x.email.toLowerCase() === u) && x.password === p
+            );
+            if (!found && typeof mockUsers !== "undefined") {
+                found = mockUsers.find(
+                    (x) => x.username.toLowerCase() === u || x.email.toLowerCase() === u
+                );
+            }
+
+            if (found) {
+                localStorage.setItem("auth", JSON.stringify({
+                    id: found.id,
+                    username: found.username,
+                    name: found.name,
+                    email: found.email,
+                    phone: found.phone || "",
+                    role: found.role || "user",
+                    img: found.img || "./assets/profile-mock.png"
+                }));
+                location.reload();
+            } else {
+                err.textContent = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
+                err.style.display = "block";
+            }
+        }
+
+        function handleModalRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById("modalRegName").value.trim();
+            const username = document.getElementById("modalRegUsername").value.trim();
+            const email = document.getElementById("modalRegEmail").value.trim();
+            const phone = document.getElementById("modalRegPhone").value.trim();
+            const pass = document.getElementById("modalRegPass").value;
+            const confirmPass = document.getElementById("modalRegConfirmPass").value;
+            const err = document.getElementById("modalRegisterError");
+            err.style.display = "none";
+
+            if (pass !== confirmPass) {
+                err.textContent = "รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน";
+                err.style.display = "block";
+                return;
+            }
+
+            const localUsers = JSON.parse(localStorage.getItem("users") || "[]");
+            const exists = localUsers.some(x => x.username.toLowerCase() === username.toLowerCase() || x.email.toLowerCase() === email.toLowerCase()) ||
+                (typeof mockUsers !== "undefined" && mockUsers.some(x => x.username.toLowerCase() === username.toLowerCase() || x.email.toLowerCase() === email.toLowerCase()));
+
+            if (exists) {
+                err.textContent = "ชื่อผู้ใช้หรืออีเมลนี้มีอยู่ในระบบแล้ว";
+                err.style.display = "block";
+                return;
+            }
+
+            const newUser = { id: Date.now(), img: "./assets/profile-mock.png", username, name, email, phone, password: pass, role: "user", status: "active" };
+            localUsers.push(newUser);
+            localStorage.setItem("users", JSON.stringify(localUsers));
+            localStorage.setItem("auth", JSON.stringify({ id: newUser.id, username, name, email, phone, role: "user", img: newUser.img }));
+            location.reload();
+        }
+
+        const authData = localStorage.getItem("auth");
+        if (authData) {
+            let auth = {};
+            try { auth = JSON.parse(authData); } catch (e) { }
+            profileImg.src = auth.img || "./assets/profile-mock.png";
+            profileImg.alt = "profile";
+            profileImg.classList.add("nav-profile");
+            profileImg.title = `${auth.name || auth.username || "ผู้ใช้"}`;
+            profileImg.onclick = function () {
+                window.location.href = "./src/profile/profile.html";
+            };
+            profileContainer.appendChild(profileImg);
+        } else {
+            buttonLogin.textContent = "Login";
+            buttonLogin.classList.add("login-btn");
+            buttonLogin.onclick = function () {
+                if (window.innerWidth > 768) {
+                    loginDialog.showModal();
+                } else {
+                    window.location.href = "./src/login/login.html";
+                }
+            };
+            profileContainer.appendChild(buttonLogin);
+        }
+    </script>
     <script>
         localStorage.removeItem("filterState");
     </script>

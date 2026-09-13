@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KKC - ข้อมูลส่วนตัว</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/logo-nrm.jpg" />
+    <link rel="stylesheet" href="../../style/style.css" />
+</head>
+
+<body>
+    <nav>
+        <a href="profile.html" class="nav-container">
+            <img src="../../public/arrow.svg" alt="arrow" class="back-arrow arrow-left mobile-only" />
+            <span class="mobile-only">ข้อมูลส่วนตัว</span>
+            <img src="../../assets/logo.png" alt="logo" class="logo desktop-only" />
+        </a>
+    </nav>
+
+    <section>
+        <div class="path-home-container desktop-only">
+            <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <a href="profile.html" class="path-text">Profile</a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <span class="path-text">ข้อมูลส่วนตัว</span>
+        </div>
+    </section>
+
+    <main class="profile-wrapper">
+        <div class="profile-page-content">
+            <div
+                style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--color-gray-light);">
+                <img src="../../assets/profile-mock.png" alt="avatar" class="profile-avatar-lg" id="personalAvatar"
+                    style="margin-bottom: 0;" />
+                <div>
+                    <h2 class="" id="personalName" style="font-size: 20px; margin-bottom: 4px;">กำลังโหลด...</h2>
+                    <span id="personalRole" style="font-size: 13px; color: #888; text-transform: uppercase;">USER</span>
+                </div>
+            </div>
+
+            <h3 class="" style="font-size: 18px; margin-bottom: 16px;">ข้อมูลบัญชีผู้ใช้</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">ชื่อ - นามสกุล</span>
+                    <span class="info-value" id="infoName">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ชื่อผู้ใช้ (Username)</span>
+                    <span class="info-value" id="infoUsername">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">อีเมล</span>
+                    <span class="info-value" id="infoEmail">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">เบอร์โทรศัพท์</span>
+                    <span class="info-value" id="infoPhone">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">สถานะบัญชี</span>
+                    <span class="info-value" id="infoStatus">Active</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ระดับผู้ใช้</span>
+                    <span class="info-value" id="infoRole">User</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="profile-sticky-footer">
+        <a href="profile.html" class="auth-btn"
+            style="display: block; text-align: center; background-color: var(--color-gray-dark); margin: 0;">
+            ← กลับหน้าโปรไฟล์
+        </a>
+    </footer>
+
+    <script>
+        const authData = localStorage.getItem("auth");
+        if (!authData) {
+            window.location.href = "../login/login.html";
+        }
+
+        try {
+            const user = JSON.parse(authData);
+            document.getElementById("personalName").textContent = user.name || user.username || "ผู้ใช้";
+            document.getElementById("personalRole").textContent = user.role || "USER";
+            if (user.img) {
+                document.getElementById("personalAvatar").src = user.img.replace("./assets/", "../../assets/");
+            }
+            document.getElementById("infoName").textContent = user.name || "-";
+            document.getElementById("infoUsername").textContent = user.username || "-";
+            document.getElementById("infoEmail").textContent = user.email || "-";
+            document.getElementById("infoPhone").textContent = user.phone || "-";
+            document.getElementById("infoRole").textContent = user.role || "User";
+        } catch (e) {
+            window.location.href = "../login/login.html";
+        }
+    </script>
+</body>
+
+</html>

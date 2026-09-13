@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KKC - ออร์เดอร์ของฉัน</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/logo-nrm.jpg" />
+    <link rel="stylesheet" href="../../style/style.css" />
+</head>
+
+<body>
+    <nav>
+        <a href="profile.html" class="nav-container">
+            <img src="../../public/arrow.svg" alt="arrow" class="back-arrow arrow-left mobile-only" />
+            <span class="mobile-only">รายการคำสั่งซื้อและสถานะจัดส่ง</span>
+            <img src="../../assets/logo.png" alt="logo" class="logo desktop-only" />
+        </a>
+    </nav>
+
+    <section>
+        <div class="path-home-container desktop-only">
+            <a href="../../index.html"><img src="../../public/home.svg" alt="home" /></a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <a href="profile.html" class="path-text">Profile</a>
+            <img src="../../public/arrow.svg" alt="arrow" class="arrow" />
+            <span class="path-text">ออร์เดอร์ของฉัน</span>
+        </div>
+    </section>
+
+    <main class="profile-wrapper">
+        <div class="profile-page-content">
+            <!-- <h2 class="title"
+                style="font-size: 20px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--color-gray-light);">
+                รายการคำสั่งซื้อและสถานะจัดส่ง
+            </h2> -->
+
+            <div class="order-list" id="orderListContainer">
+                <div style="text-align: center; color: #888; padding: 40px 0;">กำลังโหลดรายการ...</div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="profile-sticky-footer">
+        <a href="profile.html" class="auth-btn"
+            style="display: block; text-align: center; background-color: var(--color-gray-dark); margin: 0;">
+            ← กลับหน้าโปรไฟล์
+        </a>
+    </footer>
+
+
+    <script src="../../mockup/products.js"></script>
+    <script src="../../mockup/user.js"></script>
+    <script src="../../mockup/order.js"></script>
+    <script>
+        const authData = localStorage.getItem("auth");
+        if (!authData) {
+            window.location.href = "../login/login.html";
+        }
+
+        let currentUser = {};
+        try {
+            currentUser = JSON.parse(authData);
+        } catch (e) {
+            window.location.href = "../login/login.html";
+        }
+
+        const container = document.getElementById("orderListContainer");
+        let userOrders = [];
+        if (typeof mockOrders !== "undefined") {
+            userOrders = mockOrders.filter((o) => o.userId === currentUser.id);
+            if (userOrders.length === 0) {
+                userOrders = mockOrders.slice(0, 4);
+            }
+        }
+
+        if (userOrders.length === 0) {
+            container.innerHTML = `<div style="text-align: center; color: #888; padding: 40px 0; font-family: var(--font-krub);">ยังไม่มีรายการคำสั่งซื้อ</div>`;
+        } else {
+            const badgeClassMap = {
+                "รอดำเนินการ": "badge-pending",
+                "กำลังจัดส่ง": "badge-shipping",
+                "จัดส่งแล้ว": "badge-delivered",
+                "ยกเลิก": "badge-cancelled"
+            };
+
+            container.innerHTML = userOrders.map((order) => {
+                const product = typeof mockProducts !== "undefined"
+                    ? mockProducts.find((p) => p.id === order.productId) || { name: `สินค้า #${order.productId}`, image: "../../assets/logo.png" }
+                    : { name: `สินค้า #${order.productId}`, image: "../../assets/logo.png" };
+
+                const imgPath = product.image ? product.image.replace("./assets/", "../../assets/") : "../../assets/logo.png";
+                const badgeClass = badgeClassMap[order.status] || "badge-pending";
+                const dateStr = new Date(order.createdAt).toLocaleDateString("th-TH", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+
+                return `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <span class="order-id">#${String(order.id).padStart(5, "0")}</span>
+                                <span style="font-size: 12px; color: #888; margin-left: 10px;">${dateStr}</span>
+                            </div>
+                            <span class="order-badge ${badgeClass}">${order.status}</span>
+                        </div>
+                        <div class="order-body">
+                            <img src="${imgPath}" alt="${product.name}" class="order-img" />
+                            <div class="order-details">
+                                <span class="order-product-name">${product.name}</span>
+                                <span class="order-qty-price">จำนวน: ${order.quantity} ชิ้น | ราคาชิ้นละ ${order.price} บาท</span>
+                            </div>
+                            <div class="order-total">
+                                <span>ยอดรวม: ${order.total} บาท</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+    </script>
+</body>
+
+</html>

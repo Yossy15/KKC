@@ -1,0 +1,19 @@
+# KKC Apache Configuration
+
+DirectoryIndex index.php index.html
+
+# Prevent directory listings
+Options -Indexes
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Protect sensitive files and directories
+<FilesMatch "(^\.|\.(sql|json|md|log)$)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
