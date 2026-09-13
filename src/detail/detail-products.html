@@ -29,6 +29,8 @@
     <main class="product-container">
         <div class="product-image">
             <img id="productImage" src="../../assets/logo.png" alt="Product" class="logo" />
+            <img id="soldOverlay" src="../../assets/sell.png" alt="sold" class="sold-overlay-detail"
+                style="display: none" />
         </div>
         <div class="product-info-main">
             <div class="colunm-flex">
@@ -102,12 +104,14 @@
     <script src="../../mockup/products.js"></script>
 
     <script>
-        document.getElementById("backButton").addEventListener("click", function (e) {
-            if (window.innerWidth <= 768) {
-                e.preventDefault();
-                history.back();
-            }
-        });
+        document
+            .getElementById("backButton")
+            .addEventListener("click", function (e) {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    history.back();
+                }
+            });
     </script>
 
     <script>
@@ -117,26 +121,54 @@
 
         if (product) {
             document.title = `KKC - ${product.name}`;
-            document.getElementById("productImage").src = product.image.replace("./assets/", "../../assets/");
+            document.getElementById("productImage").src =
+                product.image.replace("./assets/", "../../assets/");
             document.getElementById("productImage").alt = product.name;
-            document.getElementById("productName").textContent = product.name;
-            document.getElementById("productPrice").textContent = `ราคา: ${product.price} บาท`;
-            document.getElementById("productSize").textContent = `ขนาด: ${product.size}`;
-            document.getElementById("productColor").textContent = `สี: ${product.color}`;
-            document.getElementById("infoId").textContent = `P${String(product.id).padStart(5, "0")}`;
+            document.getElementById("productName").textContent =
+                product.name;
+            document.getElementById("productPrice").textContent =
+                `ราคา: ${product.price} บาท`;
+            document.getElementById("productSize").textContent =
+                `ขนาด: ${product.size}`;
+            document.getElementById("productColor").textContent =
+                `สี: ${product.color}`;
+            document.getElementById("infoId").textContent =
+                `P${String(product.id).padStart(5, "0")}`;
             document.getElementById("infoCategory").textContent =
-                { shirt: "เสื้อ", pants: "กางเกง", skirt: "กระโปรง", cap: "หมวก" }[product.type] || product.type;
+                {
+                    shirt: "เสื้อ",
+                    pants: "กางเกง",
+                    skirt: "กระโปรง",
+                    cap: "หมวก",
+                }[product.type] || product.type;
             document.getElementById("infoName").textContent = product.name;
             document.getElementById("infoSize").textContent = product.size;
-            document.getElementById("infoColor").textContent = product.color;
-            document.getElementById("infoPrice").textContent = `${product.price} บาท`;
-            document.getElementById("infoStatus").setAttribute("data-status", product.status);
-            document.getElementById("infoStatus").textContent = product.status;
+            document.getElementById("infoColor").textContent =
+                product.color;
+            document.getElementById("infoPrice").textContent =
+                `${product.price} บาท`;
+            document
+                .getElementById("infoStatus")
+                .setAttribute("data-status", product.status);
+            document.getElementById("infoStatus").textContent =
+                product.status;
+
+            // Show sold overlay if status is "ขายแล้ว"
+            if (product.status === "ขายแล้ว") {
+                document.getElementById("soldOverlay").style.display =
+                    "block";
+            }
         } else {
-            document.getElementById("productName").textContent = "ไม่พบสินค้า";
-            document.getElementById("productPrice").textContent = "กรุณาเลือกสินค้าใหม่";
+            document.getElementById("productName").textContent =
+                "ไม่พบสินค้า";
+            document.getElementById("productPrice").textContent =
+                "กรุณาเลือกสินค้าใหม่";
             setTimeout(() => {
-                if (confirm("ไม่พบสินค้าที่ต้องการ\nต้องการกลับไปหน้าแรกหรือไม่?")) {
+                if (
+                    confirm(
+                        "ไม่พบสินค้าที่ต้องการ\nต้องการกลับไปหน้าแรกหรือไม่?",
+                    )
+                ) {
                     window.location.href = "../../index.html";
                 }
             }, 500);

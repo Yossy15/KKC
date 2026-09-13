@@ -51,6 +51,14 @@
                     </div>
 
                     <div class="filter-section">
+                        <h3>สถานะ</h3>
+                        <div class="checkbox-form">
+                            <label><input type="checkbox" name="status" value="ขายแล้ว" /> ขายแล้ว</label>
+                            <label><input type="checkbox" name="status" value="พร้อมส่ง" /> พร้อมส่ง</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
                         <h3>ขนาด</h3>
                         <div class="checkbox-form">
                             <label><input type="checkbox" name="size" value="S" />
@@ -146,6 +154,7 @@
                 card.innerHTML = `
                     <div class="merch-container-card">
                         <img src="${p.image}" alt="${p.type}" class="merch-img">
+                        ${p.status === "ขายแล้ว" ? '<img src="../../assets/sell.png" alt="sold" class="sold-overlay">' : ""}
                         <div class="merch-overlay-search">
                             <a href="../detail/detail-products.html?id=${p.id}" class="circle">
                                 <img src="../../public/search.svg" alt="search" class="merch-img-search">
@@ -244,6 +253,7 @@
                 product: formData.getAll("product"),
                 size: formData.getAll("size"),
                 price: formData.getAll("price"),
+                status: formData.getAll("status"),
             };
             filteredProducts = allProducts.filter((p) => {
                 if (
@@ -253,6 +263,8 @@
                     return false;
                 if (filters.size.length && !filters.size.includes(p.size))
                     return false;
+                if (filters.status.length && !filters.status.includes(p.status))
+                    return false;
                 if (
                     filters.price.length &&
                     !filters.price.includes(String(p.price))
@@ -260,6 +272,10 @@
                     return false;
                 return true;
             });
+        } else {
+            filteredProducts = allProducts.filter(
+                (p) => p.status === "พร้อมส่ง"
+            );
         }
 
         renderProducts(filteredProducts, currentPage);
@@ -279,6 +295,7 @@
                         product: formData.getAll("product"),
                         size: formData.getAll("size"),
                         price: formData.getAll("price"),
+                        status: formData.getAll("status"),
                     };
 
                     filteredProducts = allProducts.filter((p) => {
@@ -286,6 +303,9 @@
                             filters.product.length &&
                             !filters.product.includes(p.type)
                         )
+                            return false;
+                        if (filters.status.length &&
+                            !filters.status.includes(String(p.status)))
                             return false;
                         if (
                             filters.size.length &&

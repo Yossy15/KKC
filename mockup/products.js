@@ -13,7 +13,7 @@ const colors = ["ดำ", "ขาว", "เทา", "น้ำเงิน", "�
 const status = ["พร้อมส่ง", "ขายแล้ว"];
 const payments = ["ชำระแล้ว", "รอชำระเงิน", "ยกเลิก"];
 
-for (let i = 1; i <= 200; i++) {
+for (let i = 1; i <= 100; i++) {
   const productType = productTypes[i % productTypes.length];
 
   const randomSize = sizes[Math.floor(Math.random() * sizes.length)];

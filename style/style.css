@@ -177,6 +177,26 @@ main {
     cursor: pointer;
 }
 
+.sold-overlay {
+    position: absolute;
+    top: 20%;
+    left: 14%;
+    width: 70%;
+    height: 60%;
+    object-fit: contain;
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.sold-overlay-detail {
+    position: absolute;
+    top: 5%;
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: 1;
+}
+
 .merch-container-card:hover .merch-img {
     transform: scale(1.06);
     border-radius: 10px;
@@ -209,6 +229,7 @@ main {
         opacity 0.3s ease,
         transform 0.3s ease;
     pointer-events: none;
+    z-index: 10;
 }
 
 .merch-overlay-search {
@@ -228,6 +249,7 @@ main {
         opacity 0.3s ease,
         transform 0.3s ease;
     pointer-events: none;
+    z-index: 10;
 }
 
 .merch-container-card:hover .merch-overlay {
@@ -436,6 +458,7 @@ main {
     justify-content: center;
     align-items: center;
     max-width: 500px;
+    position: relative;
 }
 
 .product-image img {

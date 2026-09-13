@@ -143,6 +143,7 @@
                     (p) => `
                     <div class="merch-container-card">
                         <img src="${p.image}" alt="${p.type}" class="merch-img">
+                        ${p.status === "ขายแล้ว" ? '<img src="./assets/sell.png" alt="sold" class="sold-overlay">' : ""}
                         <div class="merch-overlay-search">
                             <a href="./src/detail/detail-products.html?id=${p.id}" class="circle">
                                 <img src="./public/search.svg" alt="search" class="merch-img-search">
