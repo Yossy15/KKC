@@ -1,57 +1,19 @@
 <?php
 /**
  * User Data Store & Auth Logic
+ * Direct SQLite PDO
  */
-
-function get_mock_users(): array {
-    static $baseUsers = null;
-    if ($baseUsers === null) {
-        $firstNames = ["สมชาย", "สมหญิง", "กิตติ", "อนันต์", "ธนภัทร", "ณัฐพล", "พิมพ์ชนก", "สุภาวดี", "ชลธิชา", "นภัสสร"];
-        $lastNames  = ["ใจดี", "สุขใจ", "วงศ์ดี", "ศรีสุข", "ทองดี", "เจริญสุข", "บุญมี", "แสงทอง", "คำดี", "วัฒนา"];
-
-        $baseUsers = [];
-        for ($i = 1; $i <= 50; $i++) {
-            $fn = $firstNames[($i * 3) % count($firstNames)];
-            $ln = $lastNames[($i * 5) % count($lastNames)];
-            $baseUsers["kkc{$i}"] = [
-                'id'       => $i,
-                'img'      => 'assets/profile-mock.png',
-                'username' => "kkc{$i}",
-                'name'     => "{$fn} {$ln}",
-                'email'    => "kkc{$i}@g.co",
-                'phone'    => '08' . str_pad((string)(10000000 + ($i * 1234567) % 90000000), 8, '0'),
-                'role'     => $i <= 5 ? 'admin' : 'user',
-                'status'   => 'active',
-                'password' => '1234', // Default password for mock accounts
-            ];
-        }
-    }
-
-    // Merge with any users registered during this browser session
-    $registered = $_SESSION['custom_users'] ?? [];
-    return array_merge($baseUsers, $registered);
-}
-
 require_once __DIR__ . '/db.php';
 
 function find_user_by_login(string $identifier): ?array {
     $clean = strtolower(trim($identifier));
-
     $pdo = get_db_connection();
     if ($pdo && is_db_initialized($pdo)) {
         try {
             $stmt = $pdo->prepare("SELECT * FROM users WHERE LOWER(username) = ? OR LOWER(email) = ? LIMIT 1");
             $stmt->execute([$clean, $clean]);
-            $user = $stmt->fetch();
-            if ($user) return $user;
+            return $stmt->fetch() ?: null;
         } catch (Exception $e) {}
-    }
-
-    $users = get_mock_users();
-    foreach ($users as $user) {
-        if (strtolower($user['username']) === $clean || strtolower($user['email']) === $clean) {
-            return $user;
-        }
     }
     return null;
 }
@@ -61,18 +23,7 @@ function authenticate_user(string $identifier, string $password): ?array {
     if (!$user) {
         return null;
     }
-    // Check hashed password
-    if (!empty($user['password'])) {
-        if (password_verify($password, $user['password'])) {
-            return $user;
-        }
-        // Backward compatibility with plain text passwords in mock
-        if ($user['password'] === $password) {
-            return $user;
-        }
-    }
-    // Allow mock default password '1234'
-    if ($password === '1234') {
+    if (!empty($user['password']) && password_verify($password, $user['password'])) {
         return $user;
     }
     return null;
@@ -103,14 +54,13 @@ function register_new_user(array $data): array {
 
     $hashedPass = password_hash($pass, PASSWORD_DEFAULT);
     $newUser = [
-        'id'       => time(),
-        'img'      => 'assets/profile-mock.png',
         'username' => $username,
         'name'     => $name ?: $username,
         'email'    => $email,
         'phone'    => $phone,
         'role'     => 'user',
         'status'   => 'active',
+        'img'      => 'assets/profile-mock.png',
         'password' => $hashedPass,
     ];
 
@@ -133,13 +83,38 @@ function register_new_user(array $data): array {
             ]);
             $newUser['id'] = (int)$pdo->lastInsertId();
             return ['success' => true, 'user' => $newUser];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'];
+        }
+    }
+
+    return ['success' => false, 'error' => 'ฐานข้อมูลไม่พร้อมใช้งาน'];
+}
+
+function update_user_address(int $userId, string $address): bool {
+    $clean = trim($address);
+    $pdo = get_db_connection();
+    if ($pdo && is_db_initialized($pdo)) {
+        try {
+            $stmt = $pdo->prepare("UPDATE users SET address = ? WHERE id = ?");
+            $stmt->execute([$clean, $userId]);
+            if (isset($_SESSION['user']) && (int)($_SESSION['user']['id'] ?? 0) === $userId) {
+                $_SESSION['user']['address'] = $clean;
+            }
+            return true;
         } catch (Exception $e) {}
     }
+    return false;
+}
 
-    if (!isset($_SESSION['custom_users'])) {
-        $_SESSION['custom_users'] = [];
+function get_user_by_id(int $userId): ?array {
+    $pdo = get_db_connection();
+    if ($pdo && is_db_initialized($pdo)) {
+        try {
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ? LIMIT 1");
+            $stmt->execute([$userId]);
+            return $stmt->fetch() ?: null;
+        } catch (Exception $e) {}
     }
-    $_SESSION['custom_users'][$username] = $newUser;
-
-    return ['success' => true, 'user' => $newUser];
+    return null;
 }

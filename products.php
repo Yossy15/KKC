@@ -5,17 +5,10 @@
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/data/products_data.php';
 
-// Normalize GET array parameters (supports both product[]=shirt and product=shirt)
-function normalize_param($val): array {
-    if (empty($val)) return [];
-    if (is_array($val)) return $val;
-    return [$val];
-}
-
-$filterProduct = normalize_param($_GET['product'] ?? []);
-$filterSize    = normalize_param($_GET['size'] ?? []);
-$filterPrice   = normalize_param($_GET['price'] ?? []);
-$filterStatus  = normalize_param($_GET['status'] ?? []);
+$filterProduct = (array)($_GET['product'] ?? []);
+$filterSize    = (array)($_GET['size'] ?? []);
+$filterPrice   = (array)($_GET['price'] ?? []);
+$filterStatus  = (array)($_GET['status'] ?? []);
 
 // Default status: พร้อมส่ง if not explicitly specified
 if (empty($filterStatus) && !isset($_GET['filter_applied'])) {

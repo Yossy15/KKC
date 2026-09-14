@@ -1,53 +1,8 @@
 <?php
 /**
  * Order Data Store & Query Helpers
+ * Direct SQLite PDO
  */
-
-require_once __DIR__ . '/products_data.php';
-
-function get_all_orders(): array {
-    static $orders = null;
-    if ($orders !== null) {
-        return $orders;
-    }
-
-    $orderStatuses = [
-        "รอดำเนินการ",
-        "กำลังจัดส่ง",
-        "จัดส่งแล้ว",
-        "ยกเลิก",
-    ];
-
-    $orders = [];
-    for ($i = 1; $i <= 100; $i++) {
-        $userId = ($i % 30) + 1;
-        $productId = ($i % 100) + 1;
-        $product = get_product_by_id($productId) ?? [
-            'name' => "สินค้า #{$productId}",
-            'price' => 30,
-            'image' => 'assets/shirt.png'
-        ];
-        $quantity = ($i % 3) + 1;
-        $status = $orderStatuses[$i % count($orderStatuses)];
-        $daysAgo = ($i * 3) % 30;
-        $timestamp = time() - ($daysAgo * 86400) - ($i * 3600);
-
-        $orders[] = [
-            'id'         => $i,
-            'userId'     => $userId,
-            'productId'  => $productId,
-            'product'    => $product,
-            'quantity'   => $quantity,
-            'price'      => $product['price'],
-            'total'      => $product['price'] * $quantity,
-            'status'     => $status,
-            'createdAt'  => date('Y-m-d H:i:s', $timestamp),
-        ];
-    }
-
-    return $orders;
-}
-
 require_once __DIR__ . '/db.php';
 
 function get_orders_by_user(int $userId): array {
@@ -55,43 +10,91 @@ function get_orders_by_user(int $userId): array {
     if ($pdo && is_db_initialized($pdo)) {
         try {
             $stmt = $pdo->prepare("
-                SELECT o.*, p.name as product_name, p.image as product_image, p.price as product_price
+                SELECT o.*
                 FROM orders o
-                JOIN products p ON o.product_id = p.id
                 WHERE o.user_id = ?
                 ORDER BY o.id DESC
             ");
             $stmt->execute([$userId]);
             $rows = $stmt->fetchAll();
-            if (!empty($rows)) {
-                return array_map(function($r) {
-                    return [
-                        'id'        => (int)$r['id'],
-                        'userId'    => (int)$r['user_id'],
-                        'productId' => (int)$r['product_id'],
-                        'product'   => [
-                            'name'  => $r['product_name'],
-                            'image' => $r['product_image'],
-                            'price' => (float)$r['product_price'],
-                        ],
-                        'quantity'  => (int)$r['quantity'],
-                        'price'     => (float)$r['price'],
-                        'total'     => (float)$r['total'],
-                        'status'    => $r['status'],
-                        'createdAt' => $r['created_at'],
-                    ];
-                }, $rows);
-            }
+            return array_map(function($r) {
+                $items = !empty($r['items']) ? json_decode($r['items'], true) : [];
+                if (!is_array($items) || empty($items)) {
+                    $items = [[
+                        'id'       => (int)($r['product_id'] ?? 1),
+                        'name'     => 'สินค้า #' . ($r['product_id'] ?? 1),
+                        'image'    => 'assets/shirt.png',
+                        'price'    => (float)($r['price'] ?? $r['total'] ?? 0),
+                        'quantity' => (int)($r['quantity'] ?? 1),
+                    ]];
+                }
+                $firstItem = $items[0] ?? [
+                    'id'       => 0,
+                    'name'     => 'สินค้า',
+                    'image'    => 'assets/shirt.png',
+                    'price'    => (float)($r['total'] ?? 0),
+                    'quantity' => 1,
+                ];
+                return [
+                    'id'        => (int)$r['id'],
+                    'userId'    => (int)$r['user_id'],
+                    'items'     => $items,
+                    'productId' => (int)($firstItem['id'] ?? $r['product_id'] ?? 0),
+                    'product'   => [
+                        'name'  => $firstItem['name'] ?? 'สินค้า',
+                        'image' => $firstItem['image'] ?? 'assets/shirt.png',
+                        'price' => (float)($firstItem['price'] ?? 0),
+                    ],
+                    'quantity'  => (int)array_sum(array_column($items, 'quantity')),
+                    'price'     => (float)($firstItem['price'] ?? $r['total']),
+                    'total'     => (float)$r['total'],
+                    'status'    => $r['status'] ?? 'รอดำเนินการ',
+                    'createdAt' => $r['created_at'],
+                ];
+            }, $rows);
         } catch (Exception $e) {}
     }
+    return [];
+}
 
-    $orders = get_all_orders();
-    $userOrders = array_values(array_filter($orders, fn($o) => $o['userId'] === $userId));
+function get_order_by_id(int $orderId): ?array {
+    $pdo = get_db_connection();
+    if ($pdo && is_db_initialized($pdo)) {
+        try {
+            $stmt = $pdo->prepare("
+                SELECT o.*, u.name as user_name, u.username, u.email as user_email, u.phone as user_phone, u.address as user_address
+                FROM orders o
+                LEFT JOIN users u ON o.user_id = u.id
+                WHERE o.id = ?
+                LIMIT 1
+            ");
+            $stmt->execute([$orderId]);
+            $r = $stmt->fetch();
+            if (!$r) return null;
 
-    // If user has no orders (e.g. newly registered), provide a few sample orders
-    if (empty($userOrders)) {
-        $userOrders = array_slice($orders, 0, 4);
+            $items = !empty($r['items']) ? json_decode($r['items'], true) : [];
+            if (!is_array($items) || empty($items)) {
+                $items = [[
+                    'id'       => (int)($r['product_id'] ?? 1),
+                    'name'     => 'สินค้า #' . ($r['product_id'] ?? 1),
+                    'image'    => 'assets/shirt.png',
+                    'price'    => (float)($r['price'] ?? $r['total'] ?? 0),
+                    'quantity' => (int)($r['quantity'] ?? 1),
+                ]];
+            }
+            return [
+                'id'          => (int)$r['id'],
+                'userId'      => (int)$r['user_id'],
+                'userName'    => $r['user_name'] ?? '',
+                'userEmail'   => $r['user_email'] ?? '',
+                'userPhone'   => $r['user_phone'] ?? '',
+                'address'     => !empty($r['address']) ? $r['address'] : ($r['user_address'] ?? ''),
+                'items'       => $items,
+                'total'       => (float)$r['total'],
+                'status'      => $r['status'] ?? 'รอดำเนินการ',
+                'createdAt'   => $r['created_at'],
+            ];
+        } catch (Exception $e) {}
     }
-
-    return $userOrders;
+    return null;
 }

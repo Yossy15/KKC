@@ -7,6 +7,8 @@ require_once __DIR__ . '/functions.php';
 $page_title = $page_title ?? 'KKC - Kai Khong Chan';
 $show_back_arrow = $show_back_arrow ?? false;
 $back_url = $back_url ?? base_url('index.php');
+$hide_nav_admin_btn = $hide_nav_admin_btn ?? false;
+$hide_nav_cart = $hide_nav_cart ?? false;
 $currentUser = current_user();
 ?>
 <!doctype html>
@@ -29,11 +31,12 @@ $currentUser = current_user();
             <?php endif; ?>
         </a>
         <div class="nav-icon-group" style="display: flex; align-items: center; gap: 16px;">
-            <?php if ($currentUser && $currentUser['role'] === 'admin'): ?>
+            <?php if (!$hide_nav_admin_btn && $currentUser && $currentUser['role'] === 'admin'): ?>
                 <a href="<?= base_url('admin.php') ?>" class="login-btn" style="background-color: var(--color-error); font-size: 12px; padding: 4px 10px; text-decoration: none;">
                     ADMIN PANEL
                 </a>
             <?php endif; ?>
+            <?php if (!$hide_nav_cart): ?>
             <a href="<?= base_url('cart.php') ?>" class="nav-cart" aria-label="ตะกร้าสินค้า" style="position: relative; display: flex; align-items: center;">
                 <img src="<?= asset_url('public/cart.svg') ?>" alt="cart">
                 <?php $cartCount = get_cart_count(); if ($cartCount > 0): ?>
@@ -42,6 +45,7 @@ $currentUser = current_user();
                     </span>
                 <?php endif; ?>
             </a>
+            <?php endif; ?>
             <div id="profile-container">
                 <?php if ($currentUser): ?>
                     <a href="<?= base_url('profile.php') ?>">

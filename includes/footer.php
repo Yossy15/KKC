@@ -6,9 +6,9 @@ $currentScript = basename($_SERVER['PHP_SELF'] ?? '');
 $isHome = in_array($currentScript, ['index.php', ''], true);
 $isProduct = in_array($currentScript, ['products.php', 'product-detail.php'], true);
 $isCart = ($currentScript === 'cart.php');
-$isProfile = in_array($currentScript, ['profile.php', 'login.php'], true);
+$isProfile = ($currentScript === 'profile.php');
 $footerCartCount = function_exists('get_cart_count') ? get_cart_count() : 0;
-$hasInnerTabBar = in_array($currentScript, ['profile.php', 'admin.php', 'product-detail.php', 'login.php'], true);
+$hasInnerTabBar = in_array($currentScript, ['profile.php', 'admin.php', 'product-detail.php', 'login.php', 'cart.php', 'checkout.php'], true);
 ?>
     <!-- Desktop Footer (แสดงเป็น © 2026 KAI KHONG CHAN เหมือนเดิม) -->
     <section>

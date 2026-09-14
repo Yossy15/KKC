@@ -61,7 +61,20 @@ function is_logged_in(): bool {
 }
 
 function current_user(): ?array {
-    return $_SESSION['user'] ?? null;
+    if (empty($_SESSION['user'])) {
+        return null;
+    }
+    if (!isset($_SESSION['user']['address']) && !empty($_SESSION['user']['id'])) {
+        $pdo = get_db_connection();
+        if ($pdo) {
+            try {
+                $stmt = $pdo->prepare("SELECT address FROM users WHERE id = ?");
+                $stmt->execute([$_SESSION['user']['id']]);
+                $_SESSION['user']['address'] = (string)($stmt->fetchColumn() ?: '');
+            } catch (Exception $e) {}
+        }
+    }
+    return $_SESSION['user'];
 }
 
 function is_admin(): bool {
@@ -143,6 +156,7 @@ function login_user(array $user): void {
         'name'     => $user['name'] ?? $user['username'],
         'email'    => $user['email'] ?? '',
         'phone'    => $user['phone'] ?? '',
+        'address'  => $user['address'] ?? '',
         'role'     => $user['role'] ?? 'user',
         'status'   => $user['status'] ?? 'active',
         'img'      => !empty($user['img']) ? $user['img'] : 'assets/profile-mock.png',
@@ -231,10 +245,5 @@ function get_cart_count(): int {
 }
 
 function get_cart_total(): float {
-    $cart = get_cart();
-    $total = 0.0;
-    foreach ($cart as $item) {
-        $total += $item['price'] * $item['quantity'];
-    }
-    return $total;
+    return (float)array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], get_cart()));
 }
